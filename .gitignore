@@ -1,0 +1,8 @@
+# Python
+.venv
+venv
+*.pyc
+
+# IDE
+.idea
+.vscode
