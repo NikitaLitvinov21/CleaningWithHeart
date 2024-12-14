@@ -6,3 +6,7 @@ venv
 # IDE
 .idea
 .vscode
+
+# Secrets
+credentials.json
+tokens
