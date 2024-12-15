@@ -1,0 +1,13 @@
+# Python
+.env
+.venv
+venv
+*.pyc
+
+# IDE
+.idea
+.vscode
+
+# Secrets
+credentials.json
+tokens
