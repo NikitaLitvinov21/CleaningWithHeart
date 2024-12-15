@@ -7,6 +7,8 @@ venv
 # IDE
 .idea
 .vscode
+cli
+cli/start.bat
 
 # Secrets
 credentials.json
