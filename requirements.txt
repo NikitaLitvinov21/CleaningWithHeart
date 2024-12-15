@@ -13,6 +13,7 @@ google-auth==2.37.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.1
 googleapis-common-protos==1.66.0
+greenlet==3.1.1
 httplib2==0.22.0
 idna==3.10
 itsdangerous==2.2.0
@@ -21,16 +22,19 @@ MarkupSafe==3.0.2
 oauthlib==3.2.2
 proto-plus==1.25.0
 protobuf==5.29.1
+psycopg2-binary==2.9.10
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 pydantic==2.10.3
 pydantic_core==2.27.1
 pyparsing==3.2.0
+python-dotenv==1.0.1
 pytz==2024.2
 requests==2.32.3
 requests-oauthlib==2.0.0
 rsa==4.9
 six==1.17.0
+SQLAlchemy==2.0.36
 typing_extensions==4.12.2
 uritemplate==4.1.1
 urllib3==2.2.3

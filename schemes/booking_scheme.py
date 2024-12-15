@@ -22,7 +22,7 @@ class BookingScheme(Scheme):
     last_name: Annotated[
         str,
         StringConstraints(
-            min_length=1,
+            min_length=0,
             max_length=30,
             pattern=str_regexp,
             strip_whitespace=True,
