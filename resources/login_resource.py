@@ -4,7 +4,7 @@ from flask import Response, jsonify, request
 from flask_jwt_extended import create_access_token
 from flask_restful import Resource
 
-from database.user import User
+from models.user import User
 from services.user_service import UserService
 
 

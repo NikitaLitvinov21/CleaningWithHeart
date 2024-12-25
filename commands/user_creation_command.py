@@ -1,17 +1,16 @@
 from datetime import date
 from getpass import getpass
 
-from commands.command import Command
 from exceptions.command_exception import CommandException
 from schemes.user_scheme import UserScheme
 from services.user_service import UserService
 
 
-class UserCreationCommand(Command):
+class UserCreationCommand:
 
     def __init__(self):
         self.user_service = UserService()
-        self.super().__init__()
+        self.handle()
 
     def handle(self) -> None:
         username = input("[Required] Input username: ")
