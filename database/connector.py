@@ -1,16 +1,17 @@
-from os import getenv
+import os
 
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
+from models.user import User        # noqa
 from models.booking import Booking  # noqa
 
-USERNAME = getenv("POSTGRES_USER")
-PASSWORD = getenv("POSTGRES_PASSWORD")
-HOST = getenv("POSTGRES_HOST")
-PORT = getenv("POSTGRES_PORT")
-DATABASE_NAME = getenv("POSTGRES_DB")
+USERNAME = os.getenv("POSTGRES_USER")
+PASSWORD = os.getenv("POSTGRES_PASSWORD")
+HOST = os.getenv("POSTGRES_HOST")
+PORT = os.getenv("POSTGRES_PORT")
+DATABASE_NAME = os.getenv("POSTGRES_DB")
 
 if not USERNAME or not PASSWORD or not HOST or not PORT or not DATABASE_NAME:
     raise RuntimeError(
