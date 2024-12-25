@@ -1,4 +1,3 @@
-from datetime import date
 from getpass import getpass
 
 from exceptions.command_exception import CommandException
@@ -19,12 +18,9 @@ class UserCreationCommand:
         last_name = input("[Optional] Input last name: ")
         phone_number = input("[Optional] Input phone number: ")
         email_address = input("[Optional] Input email: ")
-        try:
-            birth_date = date(
-                input("[Optional] Input birth date (Example, '2000-12-28'): ")
-            )
-        except TypeError:
-            birth_date = None
+
+        if phone_number == "":
+            phone_number = None
 
         UserScheme(
             username=username,
@@ -33,7 +29,6 @@ class UserCreationCommand:
             last_name=last_name,
             phone_number=phone_number,
             email_address=email_address,
-            birth_date=birth_date,
         )
 
         if self.user_service.is_user_exists(username=username):
@@ -47,7 +42,6 @@ class UserCreationCommand:
                 last_name=last_name,
                 phone_number=phone_number,
                 email_address=email_address,
-                birth_date=birth_date,
             )
             print("Registered new user!")
         else:

@@ -1,4 +1,3 @@
-from datetime import date
 from typing import Optional
 
 from sqlalchemy.orm import Session
@@ -18,7 +17,6 @@ class UserService:
         last_name: Optional[str] = None,
         phone_number: Optional[str] = None,
         email_address: Optional[str] = None,
-        birth_date: Optional[date] = None,
         session: Session = get_session(),
     ) -> None:
         user = User(
@@ -27,7 +25,6 @@ class UserService:
             last_name=last_name,
             phone_number=phone_number,
             email_address=email_address,
-            birth_date=birth_date,
             password=generate_password_hash(password),
         )
         session.add(user)

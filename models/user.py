@@ -1,4 +1,3 @@
-from datetime import date
 from typing import Optional
 
 from sqlalchemy import String
@@ -16,7 +15,6 @@ class User(Base):
     last_name: Mapped[Optional[str]]
     phone_number: Mapped[Optional[str]] = mapped_column(String(12))
     email_address: Mapped[Optional[str]]
-    birth_date: Mapped[Optional[date]]
 
     @property
     def full_name(self):
