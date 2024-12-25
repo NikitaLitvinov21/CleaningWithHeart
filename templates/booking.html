@@ -36,7 +36,7 @@
         <section class="form-section">
             <div class="form-container">
                 <div class="form-content">
-                    <form method="POST" id="bookingForm" class="booking-form">
+                    <form method="GET" id="bookingForm" class="booking-form">
                         <h3>MAIN INFORMATION</h3>
                         <div class="add-place-horizontal">
                             <div class="customer-formgroup">
@@ -103,46 +103,47 @@
                         <span class="line"></span>
                         <h3>SERVICES WE PROVIDE</h3>
                         <div class="add-place-horizontal select">
-                            <select class="form-select" required>
-                                <option value="1">Standard cleaning</option>
-                                <option value="2">Deep cleaning</option>
-                                <option value="3">Cleaning Move in/out</option>
-                                <option value="4">After construction</option>
+                            <select class="form-select" name="selected_service" required>
+                                <option selected disabled value="">Choose your service</option>
+                                <option value="standart_cleaning">Standard cleaning</option>
+                                <option value="deep_cleaning">Deep cleaning</option>
+                                <option value="cleaning_move">Cleaning Move in/out</option>
+                                <option value="after_construction">After construction</option>
                             </select>
                         </div>
                         <h3>ADDITIONAL SERVICES</h3>
                         <div class="add-place-horizontal">
                             <div class="add-place">
-                                <input type="checkbox">Clean Windows (inside)</input>
+                                <input type="checkbox" name="clean_windows">Clean Windows (inside)</input>
                             </div>
                             <div class="add-place">
-                                <input type="checkbox">Clean Oven (inside)</input>
+                                <input type="checkbox" name="clean_oven">Clean Oven (inside)</input>
                             </div>
                         </div>
                         <div class="add-place-horizontal">
                             <div class="add-place">
-                                <input type="checkbox">Clean Finished Basement</input>
+                                <input type="checkbox" name="clean_basement">Clean Finished Basement</input>
 
                             </div>
                             <div class="add-place">
-                                <input type="checkbox">Move in Cleaning</input>
+                                <input type="checkbox" name="move_in_cleaning">Move in Cleaning</input>
                             </div>
                         </div>
                         <div class="add-place-horizontal">
                             <div class="add-place">
-                                <input type="checkbox">Move out Cleaning</input>
+                                <input type="checkbox" name="move_out_cleaning">Move out Cleaning</input>
                             </div>
                             <div class="add-place">
-                                <input type="checkbox">Clean Fridge(inside)</input>
+                                <input type="checkbox" name="clean_fridge">Clean Fridge(inside)</input>
                             </div>
                         </div>
                         <span class="line"></span>
                         <h3>MORE INFORMATION</h3>
                         <div class="add-place-horizontal select">
-                            <select class="form-select">
-                                <option selected>Cleaning your house or apartment?</option>
-                                <option value="1">House</option>
-                                <option value="2">Apartment</option>
+                            <select class="form-select" name="building">
+                                <option selected disabled>Cleaning your house or apartment?</option>
+                                <option value="house">House</option>
+                                <option value="apartment">Apartment</option>
                             </select>
                         </div>
                         <div class="add-place-horizontal">
@@ -156,16 +157,16 @@
                             <div class="customer-formgroup">
                                 <label class="customer-label">Number of square feet</label>
                                 <div class="add-place">
-                                    <input type="number" name="rooms_number" class="add-place-customer-input" min="0"
+                                    <input type="number" name="square_feet" class="add-place-customer-input" min="0"
                                         placeholder="0" value="">
                                 </div>
                             </div>
                         </div>
                         <div class="add-place-horizontal select">
-                            <select class="form-select">
-                                <option selected>May we use your vacuum/mop?</option>
-                                <option value="1">Yes</option>
-                                <option value="2">No</option>
+                            <select class="form-select" name="use_equipment">
+                                <option selected disabled>May we use your vacuum/mop?</option>
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
                             </select>
                         </div>
                         <span class="line"></span>
