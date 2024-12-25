@@ -1,11 +1,7 @@
-from abc import ABCMeta, abstractmethod
-
-
-class Command(ABCMeta):
+class Command:
 
     def __init__(self):
         self.handle()
 
-    @abstractmethod
     def handle(self):
-        pass
+        raise NotImplementedError("Method handle is not implemented!")

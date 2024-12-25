@@ -5,15 +5,13 @@ from commands.command import Command
 from exceptions.command_exception import CommandException
 from schemes.user_scheme import UserScheme
 from services.user_service import UserService
-from utils.load_env_file import load_env_file
 
 
-class UserCreationCommand:
+class UserCreationCommand(Command):
 
     def __init__(self):
         self.user_service = UserService()
-        # self.super().__init__()
-        self.handle()
+        self.super().__init__()
 
     def handle(self) -> None:
         username = input("[Required] Input username: ")
