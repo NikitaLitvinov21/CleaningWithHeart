@@ -39,7 +39,7 @@ function saveBooking() {
     })
         .then(response => {
             if (response.ok) {
-                // window.location.href = "/";
+                window.location.href = "/";
                 return response.json();
             } else {
                 throw new Error(response.status);

@@ -26,7 +26,8 @@
                 <h1>CLEANING WITH HEART</h1>
                 <p>Cleanliness is the key to health and comfort</p>
             </div>
-            <div class="contact">
+            <div class="contact booking">
+                <h1 class="d-none">CLEANING WITH HEART</h1>
                 <span>647-262-8989</span>
             </div>
         </div>
@@ -36,7 +37,7 @@
         <section class="form-section">
             <div class="form-container">
                 <div class="form-content">
-                    <form method="GET" id="bookingForm" class="booking-form">
+                    <form method="POST" id="bookingForm" class="booking-form">
                         <h3>MAIN INFORMATION</h3>
                         <div class="add-place-horizontal">
                             <div class="customer-formgroup">
@@ -114,27 +115,32 @@
                         <h3>ADDITIONAL SERVICES</h3>
                         <div class="add-place-horizontal">
                             <div class="add-place">
-                                <input type="checkbox" name="clean_windows">Clean Windows (inside)</input>
+                                <input type="checkbox" name="clean_windows" class="add-place-checkbox">Clean Windows
+                                (inside)</input>
                             </div>
                             <div class="add-place">
-                                <input type="checkbox" name="clean_oven">Clean Oven (inside)</input>
-                            </div>
-                        </div>
-                        <div class="add-place-horizontal">
-                            <div class="add-place">
-                                <input type="checkbox" name="clean_basement">Clean Finished Basement</input>
-
-                            </div>
-                            <div class="add-place">
-                                <input type="checkbox" name="move_in_cleaning">Move in Cleaning</input>
+                                <input type="checkbox" name="clean_oven" class="add-place-checkbox">Clean Oven
+                                (inside)</input>
                             </div>
                         </div>
                         <div class="add-place-horizontal">
                             <div class="add-place">
-                                <input type="checkbox" name="move_out_cleaning">Move out Cleaning</input>
+                                <input type="checkbox" name="clean_basement" class="add-place-checkbox">Clean Finished
+                                Basement</input>
                             </div>
                             <div class="add-place">
-                                <input type="checkbox" name="clean_fridge">Clean Fridge(inside)</input>
+                                <input type="checkbox" name="move_in_cleaning" class="add-place-checkbox">Move in
+                                Cleaning</input>
+                            </div>
+                        </div>
+                        <div class="add-place-horizontal">
+                            <div class="add-place">
+                                <input type="checkbox" name="move_out_cleaning" class="add-place-checkbox">Move out
+                                Cleaning</input>
+                            </div>
+                            <div class="add-place">
+                                <input type="checkbox" name="clean_fridge" class="add-place-checkbox">Clean
+                                Fridge(inside)</input>
                             </div>
                         </div>
                         <span class="line"></span>

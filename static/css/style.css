@@ -755,6 +755,11 @@ input[type="number" i] {
     font-weight: 400;
 }
 
+input.add-place-checkbox {
+    width: 20px;
+    height: 20px;
+}
+
 .form-signin .form-floating:focus-within {
     z-index: 2;
 }
@@ -787,6 +792,7 @@ input[type="number" i] {
     outline: 0;
     box-shadow: 0 0 0 .25rem rgba(253, 13, 45, 0.25);
 }
+
 /* End login page */
 
 /* Booking page */
@@ -912,6 +918,14 @@ input[type="number" i] {
     .service-text {
         font-size: 1.5rem;
     }
+
+    .booking-form {
+        width: 950px;
+    }
+
+    .add-place {
+        width: 400px;
+    }
 }
 
 @media (max-width: 1000px) {
@@ -938,6 +952,27 @@ input[type="number" i] {
     .service-text {
         padding-left: 20px;
     }
+
+    .booking-form {
+        width: 80%;
+    }
+
+    .customer-formgroup {
+        width: 100%;
+    }
+
+    .add-place-horizontal {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .add-place {
+        width: 100%;
+    }
+
+    .save-button {
+        width: 100%;
+    }
 }
 
 @media (max-width: 860px) {
@@ -957,6 +992,23 @@ input[type="number" i] {
 @media (max-width: 680px) {
     .text-content {
         display: none;
+    }
+
+    .contact.booking {
+        height: auto;
+        align-items: end;
+    }
+
+    .contact.booking h1 {
+        display: block !important;
+        color: #8f1616;
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .contact.booking span {
+        top: 0;
+        font-size: 1.25rem;
     }
 
     .about-text {
@@ -1040,21 +1092,8 @@ input[type="number" i] {
         padding-right: 15px;
     }
 
-    .modal {
-        width: 100%;
-    }
-
-    .modal-content {
+    .booking-form {
         width: 90%;
-        margin: auto;
-    }
-
-    #bookingForm {
-        width: 100%;
-    }
-
-    .add-place {
-        width: auto;
     }
 }
 
