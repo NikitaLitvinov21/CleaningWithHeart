@@ -30,6 +30,13 @@ class UserService:
         session.add(user)
         session.commit()
 
+    def retrieve_user_by_id(
+        self,
+        user_id: str,
+        session: Session = get_session(),
+    ) -> Optional[User]:
+        return session.query(User).filter(User.id == user_id).first()
+
     def retrieve_user_by_username(
         self,
         username: str,

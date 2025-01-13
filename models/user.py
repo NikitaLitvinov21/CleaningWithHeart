@@ -1,12 +1,13 @@
 from typing import Optional
 
+from flask_login import UserMixin
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column  # , relationship
 
 from models.base import Base
 
 
-class User(Base):
+class User(Base, UserMixin):
     __tablename__ = "users"
 
     username: Mapped[str] = mapped_column(unique=True)
