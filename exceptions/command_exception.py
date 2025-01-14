@@ -1,2 +1,4 @@
 class CommandException(Exception):
-    pass
+    """
+    Raised when a command was used incorrectly.
+    """

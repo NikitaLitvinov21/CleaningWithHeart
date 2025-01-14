@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
+
 from os import environ
 
 from dotenv import load_dotenv
@@ -9,6 +10,7 @@ from flask_restful import Api
 
 from database.connector import create_tables
 from resources.booking_resource import BookingResource
+from resources.bookings_resource import BookingsResource
 from resources.login_resource import LoginResource
 from views.booking_view import BookingView
 from views.calendar_view import CalendarView
@@ -40,7 +42,8 @@ app.add_url_rule(
         CalendarView.as_view("calendar"),
     ),
 )
-api.add_resource(BookingResource, "/api/booking")
+api.add_resource(BookingResource, "/api/booking/<int:booking_id>")
+api.add_resource(BookingsResource, "/api/booking")
 
 
 def main():

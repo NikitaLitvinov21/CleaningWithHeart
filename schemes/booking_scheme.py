@@ -119,15 +119,7 @@ def validate_by_booking_scheme():
                 return Response(
                     status=422,
                     content_type="application/json",
-                    response=json.dumps(
-                        str(
-                            e.errors(
-                                include_url=False,
-                                include_context=False,
-                                include_input=False,
-                            ),
-                        )
-                    ),
+                    response=json.dumps(e.json())
                 )
             except ValueError as e:
                 return Response(

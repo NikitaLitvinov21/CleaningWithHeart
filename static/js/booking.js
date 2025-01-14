@@ -48,9 +48,9 @@ function saveBooking(event) {
             }
         })
         .then(responseData => {
-            console.log(responseData);
+            console.log(JSON.parse(responseData));
         })
         .catch(error => {
-            console.error(error.message);
+            console.error(JSON.parse(error.message));
         });
 }
