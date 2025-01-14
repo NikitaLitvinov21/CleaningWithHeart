@@ -20,7 +20,7 @@
         <div class="red-line"></div>
         <div class="header-container">
             <div class="logo">
-                <img src="{{ url_for('static', filename='images/heart-icon.png') }}" alt="Heart Icon">
+                <a href="/"><img src="{{ url_for('static', filename='images/heart-icon.png') }}" alt="Heart Icon"></a>
             </div>
             <div class="text-content">
                 <h1>CLEANING WITH HEART</h1>
@@ -96,8 +96,7 @@
                                 <div class="add-place">
                                     <img src="{{ url_for('static', filename='images/svg/date_customer.svg') }}"
                                         alt="date_customer" class="date_customer">
-                                    <input type="datetime-local" name="datetime_local" class="add-place-customer-input"
-                                        required value="">
+                                    <input type="datetime-local" name="start_datetime" class="add-place-customer-input" required value="">
                                 </div>
                             </div>
                         </div>
@@ -106,10 +105,10 @@
                         <div class="add-place-horizontal select">
                             <select class="form-select" name="selected_service" required>
                                 <option selected disabled value="">Choose your service</option>
-                                <option value="standart_cleaning">Standard cleaning</option>
-                                <option value="deep_cleaning">Deep cleaning</option>
-                                <option value="cleaning_move">Cleaning Move in/out</option>
-                                <option value="after_construction">After construction</option>
+                                <option value="STANDART_CLEANING">Standard cleaning</option>
+                                <option value="DEEP_CLEANING">Deep cleaning</option>
+                                <option value="CLEANING_MOVE">Cleaning Move in/out</option>
+                                <option value="AFTER_CONSTRUCTION">After construction</option>
                             </select>
                         </div>
                         <h3>ADDITIONAL SERVICES</h3>
@@ -146,10 +145,10 @@
                         <span class="line"></span>
                         <h3>MORE INFORMATION</h3>
                         <div class="add-place-horizontal select">
-                            <select class="form-select" name="building">
-                                <option selected disabled>Cleaning your house or apartment?</option>
-                                <option value="house">House</option>
-                                <option value="apartment">Apartment</option>
+                            <select class="form-select" name="building" required>
+                                <option selected disabled value="">Cleaning your house or apartment?</option>
+                                <option value="HOUSE">House</option>
+                                <option value="APARTMENT">Apartment</option>
                             </select>
                         </div>
                         <div class="add-place-horizontal">
@@ -157,27 +156,27 @@
                                 <label class="customer-label">Number of rooms</label>
                                 <div class="add-place">
                                     <input type="number" name="rooms_number" class="add-place-customer-input" min="0"
-                                        placeholder="0" value="">
+                                        placeholder="0" value="" required>
                                 </div>
                             </div>
                             <div class="customer-formgroup">
                                 <label class="customer-label">Number of square feet</label>
                                 <div class="add-place">
                                     <input type="number" name="square_feet" class="add-place-customer-input" min="0"
-                                        placeholder="0" value="">
+                                        placeholder="0" value="" required>
                                 </div>
                             </div>
                         </div>
                         <div class="add-place-horizontal select">
-                            <select class="form-select" name="use_equipment">
-                                <option selected disabled>May we use your vacuum/mop?</option>
+                            <select class="form-select" name="use_equipment" required>
+                                <option selected disabled value="">May we use your vacuum/mop?</option>
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
                         </div>
                         <span class="line"></span>
                         <div class="add-place-horizontal">
-                            <button type="button" id="saveButton" class="save-button" onclick="saveBooking()">
+                            <button type="submit" id="saveButton" class="save-button">
                                 <div class="save-button-text">BOOK THE CLEANING</div>
                             </button>
                         </div>
