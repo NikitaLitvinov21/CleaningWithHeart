@@ -27,8 +27,6 @@ class BookingsResource(Resource):
     @validate_by_booking_scheme()
     def post(self, booking: BookingScheme) -> Response:
 
-        default_cleaning_duration = timedelta(hours=2)
-
         self.booking_service.create_booking(
             first_name=booking.first_name,
             last_name=booking.last_name,
@@ -36,7 +34,7 @@ class BookingsResource(Resource):
             email=booking.email,
             street=booking.street,
             start_datetime=booking.start_datetime,
-            finish_datetime=booking.start_datetime + default_cleaning_duration,
+            finish_datetime=booking.finish_datetime,
             selected_service=booking.selected_service,
             has_clean_oven=booking.has_clean_oven,
             has_clean_windows=booking.has_clean_windows,
@@ -53,5 +51,5 @@ class BookingsResource(Resource):
         return Response(
             status=201,
             content_type="application/json",
-            response=json.dumps('{"message": "Your booking has been accepted!"}'),
+            response=json.dumps({"message": "Your booking has been accepted!"}),
         )

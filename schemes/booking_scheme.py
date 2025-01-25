@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Annotated, Union
 
 from flask import Response, json, request
@@ -50,6 +50,7 @@ class BookingScheme(Scheme):
         ),
     ]
     start_datetime: datetime
+    finish_datetime: datetime
     selected_service: SelectedService
     has_clean_oven: bool = Field(default=False)
     has_clean_windows: bool = Field(default=False)
@@ -77,6 +78,12 @@ def validate_by_booking_scheme():
                 email: Union[EmailStr, str] = data.get("email")
                 street: str = data.get("street")
                 start_datetime = datetime.fromisoformat(data.get("start_datetime"))
+                default_cleaning_duration = timedelta(hours=2)
+                finish_datetime: datetime = (
+                    datetime.fromisoformat(data.get("finish_datetime"))
+                    if data.get("finish_datetime")
+                    else start_datetime + default_cleaning_duration
+                )
                 selected_service: Union[SelectedService, str] = data.get(
                     "selected_service"
                 )
@@ -105,6 +112,7 @@ def validate_by_booking_scheme():
                     email=email,
                     street=street,
                     start_datetime=start_datetime,
+                    finish_datetime=finish_datetime,
                     selected_service=selected_service,
                     has_clean_oven=has_clean_oven,
                     has_clean_windows=has_clean_windows,
@@ -123,15 +131,15 @@ def validate_by_booking_scheme():
                 return Response(
                     status=422,
                     content_type="application/json",
-                    response=json.dumps(e.json()),
+                    response=e.json(),
                 )
-            except ValueError as e:
+            except (ValueError, TypeError) as e:
                 return Response(
                     status=400,
                     content_type="application/json",
-                    response=json.dumps('{"message": "' + str(e) + '" }'),
+                    response=json.dumps({"message": str(e)}),
                 )
-            return func(self, booking, *args, **kwargs)
+            return func(self, booking=booking, *args, **kwargs)
 
         return wrapper
 
