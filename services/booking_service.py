@@ -1,12 +1,12 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from common.exceptions.entity_not_found_exception import EntityNotFoundException
 from database.connector import get_session
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
-from exceptions.entity_not_found_exception import EntityNotFoundException
 from models.booking import Booking
 
 

@@ -4,10 +4,10 @@ from typing import Optional
 from sqlalchemy import DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column
 
+from common.utils.datetime_util import datetime_to_iso8601
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
 from models.base import Base
-from utils.datetime_util import datetime_to_iso8601
 
 
 class Booking(Base):

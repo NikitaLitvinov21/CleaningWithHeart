@@ -1,11 +1,12 @@
 from getpass import getpass
 
-from exceptions.command_exception import CommandException
+from commands.base_command import BaseCommand
+from common.exceptions.command_exception import CommandException
 from schemes.user_scheme import UserScheme
 from services.user_service import UserService
 
 
-class UserCreationCommand:
+class UserCreationCommand(BaseCommand):
 
     def __init__(self):
         self.user_service = UserService()
@@ -45,4 +46,4 @@ class UserCreationCommand:
             )
             print("Registered new user!")
         else:
-            CommandException("Username and Password are required!")
+            raise CommandException("Username and Password are required!")

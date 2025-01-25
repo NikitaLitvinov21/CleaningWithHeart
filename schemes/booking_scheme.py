@@ -4,10 +4,10 @@ from typing import Annotated, Union
 from flask import Response, json, request
 from pydantic import EmailStr, Field, StringConstraints, ValidationError
 
+from common.utils.form_request_util import convert_str_to_bool, is_checkbox_on
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
 from schemes.scheme import Scheme
-from utils.form_request_util import convert_str_to_bool, is_checkbox_on
 
 str_regexp = r"^[^\d\!\@\#\$\%\^\&\*\=\+\~\/\+\;\:\?\{\}]*$"
 
@@ -119,7 +119,7 @@ def validate_by_booking_scheme():
                 return Response(
                     status=422,
                     content_type="application/json",
-                    response=json.dumps(e.json())
+                    response=json.dumps(e.json()),
                 )
             except ValueError as e:
                 return Response(
