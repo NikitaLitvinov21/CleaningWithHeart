@@ -51,16 +51,16 @@ class BookingScheme(Scheme):
     ]
     start_datetime: datetime
     selected_service: SelectedService
-    clean_oven: bool = Field(default=False)
-    clean_windows: bool = Field(default=False)
-    clean_basement: bool = Field(default=False)
-    move_in_cleaning: bool = Field(default=False)
-    move_out_cleaning: bool = Field(default=False)
-    clean_fridge: bool = Field(default=False)
+    has_clean_oven: bool = Field(default=False)
+    has_clean_windows: bool = Field(default=False)
+    has_clean_basement: bool = Field(default=False)
+    has_move_in_cleaning: bool = Field(default=False)
+    has_move_out_cleaning: bool = Field(default=False)
+    has_clean_fridge: bool = Field(default=False)
     building: BuildingType
     rooms_number: int
     square_feet: int
-    use_equipment: bool
+    has_own_equipment: bool
 
 
 def validate_by_booking_scheme():
@@ -82,17 +82,21 @@ def validate_by_booking_scheme():
                 )
 
                 # Checkboxes
-                clean_oven: bool = is_checkbox_on(data.get("clean_oven"))
-                clean_windows: bool = is_checkbox_on(data.get("clean_windows"))
-                clean_basement: bool = is_checkbox_on(data.get("clean_basement"))
-                move_in_cleaning: bool = is_checkbox_on(data.get("move_in_cleaning"))
-                move_out_cleaning: bool = is_checkbox_on(data.get("move_out_cleaning"))
-                clean_fridge: bool = is_checkbox_on(data.get("clean_fridge"))
+                has_clean_oven: bool = is_checkbox_on(data.get("clean_oven"))
+                has_clean_windows: bool = is_checkbox_on(data.get("clean_windows"))
+                has_clean_basement: bool = is_checkbox_on(data.get("clean_basement"))
+                has_move_in_cleaning: bool = is_checkbox_on(
+                    data.get("move_in_cleaning")
+                )
+                has_move_out_cleaning: bool = is_checkbox_on(
+                    data.get("move_out_cleaning")
+                )
+                has_clean_fridge: bool = is_checkbox_on(data.get("clean_fridge"))
 
                 building: Union[BuildingType, str] = data.get("building")
                 rooms_number = abs(int(data.get("rooms_number")))
                 square_feet = abs(int(data.get("square_feet")))
-                use_equipment = convert_str_to_bool(data.get("use_equipment"))
+                has_own_equipment = convert_str_to_bool(data.get("use_equipment"))
 
                 booking = BookingScheme(
                     first_name=first_name,
@@ -102,16 +106,16 @@ def validate_by_booking_scheme():
                     street=street,
                     start_datetime=start_datetime,
                     selected_service=selected_service,
-                    clean_oven=clean_oven,
-                    clean_windows=clean_windows,
-                    clean_basement=clean_basement,
-                    move_in_cleaning=move_in_cleaning,
-                    move_out_cleaning=move_out_cleaning,
-                    clean_fridge=clean_fridge,
+                    has_clean_oven=has_clean_oven,
+                    has_clean_windows=has_clean_windows,
+                    has_clean_basement=has_clean_basement,
+                    has_move_in_cleaning=has_move_in_cleaning,
+                    has_move_out_cleaning=has_move_out_cleaning,
+                    has_clean_fridge=has_clean_fridge,
                     building=building,
                     rooms_number=rooms_number,
                     square_feet=square_feet,
-                    use_equipment=use_equipment,
+                    has_own_equipment=has_own_equipment,
                 )
                 print(booking)
 

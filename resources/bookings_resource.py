@@ -38,16 +38,16 @@ class BookingsResource(Resource):
             start_datetime=booking.start_datetime,
             finish_datetime=booking.start_datetime + default_cleaning_duration,
             selected_service=booking.selected_service,
-            clean_oven=booking.clean_oven,
-            clean_windows=booking.clean_windows,
-            clean_basement=booking.clean_basement,
-            move_in_cleaning=booking.move_in_cleaning,
-            move_out_cleaning=booking.move_out_cleaning,
-            clean_fridge=booking.clean_fridge,
+            has_clean_oven=booking.has_clean_oven,
+            has_clean_windows=booking.has_clean_windows,
+            has_clean_basement=booking.has_clean_basement,
+            has_move_in_cleaning=booking.has_move_in_cleaning,
+            has_move_out_cleaning=booking.has_move_out_cleaning,
+            has_clean_fridge=booking.has_clean_fridge,
             building=booking.building,
             rooms_number=booking.rooms_number,
             square_feet=booking.square_feet,
-            use_equipment=booking.use_equipment,
+            has_own_equipment=booking.has_own_equipment,
         )
 
         return Response(

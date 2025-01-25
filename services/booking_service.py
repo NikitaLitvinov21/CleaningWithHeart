@@ -22,16 +22,16 @@ class BookingService:
         start_datetime: datetime,
         finish_datetime: datetime,
         selected_service: SelectedService,
-        clean_oven: bool,
-        clean_windows: bool,
-        clean_basement: bool,
-        move_in_cleaning: bool,
-        move_out_cleaning: bool,
-        clean_fridge: bool,
+        has_clean_oven: bool,
+        has_clean_windows: bool,
+        has_clean_basement: bool,
+        has_move_in_cleaning: bool,
+        has_move_out_cleaning: bool,
+        has_clean_fridge: bool,
         building: BuildingType,
         rooms_number: int,
         square_feet: int,
-        use_equipment: bool,
+        has_own_equipment: bool,
         session: Session = get_session(),
     ) -> None:
         booking = Booking(
@@ -43,16 +43,16 @@ class BookingService:
             start_datetime=start_datetime,
             finish_datetime=finish_datetime,
             selected_service=selected_service,
-            clean_oven=clean_oven,
-            clean_windows=clean_windows,
-            clean_basement=clean_basement,
-            move_in_cleaning=move_in_cleaning,
-            move_out_cleaning=move_out_cleaning,
-            clean_fridge=clean_fridge,
+            has_clean_oven=has_clean_oven,
+            has_clean_windows=has_clean_windows,
+            has_clean_basement=has_clean_basement,
+            has_move_in_cleaning=has_move_in_cleaning,
+            has_move_out_cleaning=has_move_out_cleaning,
+            has_clean_fridge=has_clean_fridge,
             building=building,
             rooms_number=rooms_number,
             square_feet=square_feet,
-            use_equipment=use_equipment,
+            has_own_equipment=has_own_equipment,
         )
         session.add(booking)
         session.commit()
@@ -82,16 +82,16 @@ class BookingService:
         start_datetime: datetime,
         finish_datetime: datetime,
         selected_service: SelectedService,
-        clean_oven: bool,
-        clean_windows: bool,
-        clean_basement: bool,
-        move_in_cleaning: bool,
-        move_out_cleaning: bool,
-        clean_fridge: bool,
+        has_clean_oven: bool,
+        has_clean_windows: bool,
+        has_clean_basement: bool,
+        has_move_in_cleaning: bool,
+        has_move_out_cleaning: bool,
+        has_clean_fridge: bool,
         building: BuildingType,
         rooms_number: int,
         square_feet: int,
-        use_equipment: bool,
+        has_own_equipment: bool,
         session: Session = get_session(),
     ) -> None:
         booking: Optional[Booking] = self.retrieve_booking_by_id(
@@ -106,16 +106,16 @@ class BookingService:
             booking.start_datetime = start_datetime
             booking.finish_datetime = finish_datetime
             booking.selected_service = selected_service
-            booking.clean_oven = clean_oven
-            booking.clean_windows = clean_windows
-            booking.clean_basement = clean_basement
-            booking.move_in_cleaning = move_in_cleaning
-            booking.move_out_cleaning = move_out_cleaning
-            booking.clean_fridge = clean_fridge
+            booking.has_clean_oven = has_clean_oven
+            booking.has_clean_windows = has_clean_windows
+            booking.has_clean_basement = has_clean_basement
+            booking.has_move_in_cleaning = has_move_in_cleaning
+            booking.has_move_out_cleaning = has_move_out_cleaning
+            booking.has_clean_fridge = has_clean_fridge
             booking.building = building
             booking.rooms_number = rooms_number
             booking.square_feet = square_feet
-            booking.use_equipment = use_equipment
+            booking.has_own_equipment = has_own_equipment
             session.commit()
             session.close()
         else:

@@ -26,16 +26,16 @@ class Booking(Base):
         DateTime(timezone=True), nullable=False
     )
     selected_service: Mapped[SelectedService]
-    clean_oven: Mapped[bool]
-    clean_windows: Mapped[bool]
-    clean_basement: Mapped[bool]
-    move_in_cleaning: Mapped[bool]
-    move_out_cleaning: Mapped[bool]
-    clean_fridge: Mapped[bool]
+    has_clean_oven: Mapped[bool]
+    has_clean_windows: Mapped[bool]
+    has_clean_basement: Mapped[bool]
+    has_move_in_cleaning: Mapped[bool]
+    has_move_out_cleaning: Mapped[bool]
+    has_clean_fridge: Mapped[bool]
     building: Mapped[BuildingType]
     rooms_number: Mapped[int]
     square_feet: Mapped[int]
-    use_equipment: Mapped[bool]
+    has_own_equipment: Mapped[bool]
 
     def to_dict(self) -> dict:
         return {
@@ -48,15 +48,15 @@ class Booking(Base):
             "startDatetime": datetime_to_iso8601(self.start_datetime),
             "finishDatetime": datetime_to_iso8601(self.finish_datetime),
             "selectedService": self.selected_service,
-            "cleanOven": self.clean_oven,
-            "cleanWindows": self.clean_windows,
-            "cleanBasement": self.clean_basement,
-            "moveInCleaning": self.move_in_cleaning,
-            "cleanFridge": self.clean_fridge,
+            "cleanOven": self.has_clean_oven,
+            "cleanWindows": self.has_clean_windows,
+            "cleanBasement": self.has_clean_basement,
+            "moveInCleaning": self.has_move_in_cleaning,
+            "cleanFridge": self.has_clean_fridge,
             "building": self.building,
             "roomsNumber": self.rooms_number,
             "squareFeet": self.square_feet,
-            "useEquipment": self.use_equipment,
+            "useEquipment": self.has_own_equipment,
             # ? Inherit from Base
             "createdAt": datetime_to_iso8601(self.created_at),
             "updatedAt": datetime_to_iso8601(self.updated_at),
