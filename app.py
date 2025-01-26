@@ -8,6 +8,7 @@ from flask import Flask
 from flask_login import LoginManager, login_required
 from flask_restful import Api
 
+from common.exceptions.error_handling import enable_errorhandlers
 from database.connector import create_tables
 from resources.booking_resource import BookingResource
 from resources.bookings_resource import BookingsResource
@@ -26,6 +27,7 @@ create_tables()
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config["SECRET_KEY"] = environ["SECRET_KEY"]
+enable_errorhandlers(app)
 login_manager = LoginManager()
 login_manager.init_app(app=app)
 login_manager.user_loader(LoginResource().load_user)
