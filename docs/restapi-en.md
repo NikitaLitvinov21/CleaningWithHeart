@@ -18,6 +18,8 @@ You can use `URLSearchParams` in JavaScript to build the query.
 
 ![GetBookingsWithPage](./images/Get%20booking%20with%20page.png)
 
+Response:
+
 `bookings` - all Bookings within the page.
 
 `count` - total number of all Bookings.
@@ -97,6 +99,8 @@ You can use `URLSearchParams` in JavaScript to build the query.
 
 ![GetCustomersWithParamsCount](./images/Get%20customers%20with%20params%20count.png)
 
+Response:
+
 `customers` - all Customers within the page.
 
 `count` - total number of all Customers.
@@ -154,6 +158,8 @@ Request parameters:
 You can use `URLSearchParams` in JavaScript to build the query.
 
 ![GetEvents](./images/Get%20Events.png)
+
+Response:
 
 `events` - all Events within the page.
 

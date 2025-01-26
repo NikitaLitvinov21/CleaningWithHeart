@@ -18,6 +18,8 @@
 
 ![GetBookingsWithPage](./images/Get%20booking%20with%20page.png)
 
+Ответ:
+
 `bookings` - все Booking-и в рамках страницы.
 
 `count` - общее количество всех Booking-ов.
@@ -97,6 +99,8 @@ for (const [key, value] of formData.entries()) {
 
 ![GetCustomersWithParamsCount](./images/Get%20customers%20with%20params%20count.png)
 
+Ответ:
+
 `customers` - все Customer-ы в рамках страницы.
 
 `count` - общее количество всех Customer-ов.
@@ -154,6 +158,8 @@ for (const [key, value] of formData.entries()) {
 Можно использовать `URLSearchParams` в JavaScript для построения запроса.
 
 ![GetEvents](./images/Get%20Events.png)
+
+Ответ:
 
 `events` - все Event-ы в рамках страницы.
 
