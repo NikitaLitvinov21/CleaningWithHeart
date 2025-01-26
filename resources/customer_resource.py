@@ -1,5 +1,3 @@
-from typing import Optional
-
 from flask import Response, json
 from flask_login import login_required
 from flask_restful import Resource
