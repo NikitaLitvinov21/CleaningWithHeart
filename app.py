@@ -11,6 +11,8 @@ from flask_restful import Api
 from database.connector import create_tables
 from resources.booking_resource import BookingResource
 from resources.bookings_resource import BookingsResource
+from resources.customer_resource import CustomerResource
+from resources.customers_resource import CustomersResource
 from resources.login_resource import LoginResource
 from views.booking_view import BookingView
 from views.calendar_view import CalendarView
@@ -44,6 +46,8 @@ app.add_url_rule(
 )
 api.add_resource(BookingResource, "/api/booking/<int:booking_id>")
 api.add_resource(BookingsResource, "/api/booking")
+api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
+api.add_resource(CustomersResource, "/api/customers")
 
 
 def main():

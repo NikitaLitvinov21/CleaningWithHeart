@@ -1,7 +1,7 @@
-from datetime import timedelta
-from typing import List, Optional
+from typing import List
 
-from flask import Response, json
+from flask import Response, json, request
+from flask_login import login_required
 from flask_restful import Resource
 
 from models.booking import Booking
@@ -14,16 +14,32 @@ class BookingsResource(Resource):
     def __init__(self):
         self.booking_service = BookingService()
 
-    def get(self):
+    @login_required
+    def get(self) -> Response:
+        try:
+            bookings: List[Booking] = self.booking_service.retrieve_bookings(
+                limit=int(request.args.get("limit", 20)),
+                page=int(request.args.get("page", 1)),
+            )
+            booking_count: int = self.booking_service.retrieve_booking_count()
+            return Response(
+                status=200,
+                content_type="application/json",
+                response=json.dumps(
+                    {
+                        "bookings": [booking.to_dict() for booking in bookings],
+                        "count": booking_count,
+                    }
+                ),
+            )
+        except (ValueError, TypeError) as e:
+            return Response(
+                status=400,
+                content_type="application/json",
+                response=json.dumps({"message": str(e)}),
+            )
 
-        bookings: Optional[List[Booking]] = self.booking_service.retrieve_bookings()
-
-        return Response(
-            status=200,
-            content_type="application/json",
-            response=json.dumps([booking.to_dict() for booking in bookings]),
-        )
-
+    @login_required
     @validate_by_booking_scheme()
     def post(self, booking: BookingScheme) -> Response:
 

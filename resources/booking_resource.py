@@ -1,7 +1,5 @@
-from datetime import timedelta
-from typing import Optional
-
 from flask import Response, json
+from flask_login import login_required
 from flask_restful import Resource
 
 from common.exceptions.entity_not_found_exception import EntityNotFoundException
@@ -15,23 +13,25 @@ class BookingResource(Resource):
     def __init__(self):
         self.booking_service = BookingService()
 
+    @login_required
     def get(self, booking_id: int):
-        booking: Optional[Booking] = self.booking_service.retrieve_booking_by_id(
-            booking_id=booking_id
-        )
-        if booking:
+        try:
+            booking: Booking = self.booking_service.retrieve_booking_by_id(
+                booking_id=booking_id
+            )
             return Response(
                 status=200,
                 content_type="application/json",
                 response=json.dumps(booking.to_dict()),
             )
-        else:
+        except EntityNotFoundException as e:
             return Response(
                 status=404,
                 content_type="application/json",
-                response=json.dumps({"message": "Booking not found!"}),
+                response=json.dumps({"message": str(e)}),
             )
 
+    @login_required
     @validate_by_booking_scheme()
     def put(self, booking_id: int, booking: BookingScheme) -> Response:
         try:
@@ -68,6 +68,7 @@ class BookingResource(Resource):
                 response=json.dumps({"message": str(e)}),
             )
 
+    @login_required
     def delete(self, booking_id: int) -> Response:
         try:
             self.booking_service.delete_booking(booking_id=booking_id)

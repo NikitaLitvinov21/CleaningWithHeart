@@ -12,6 +12,43 @@ from models.booking import Booking
 
 class BookingService:
 
+    def retrieve_bookings(
+        self,
+        limit: int,
+        page: int,
+        session: Session = get_session(),
+    ) -> List[Booking]:
+        offset_value = (page - 1) * limit
+
+        bookings: List[Booking] = (
+            session.query(Booking)
+            .limit(
+                limit=limit,
+            )
+            .offset(offset_value)
+            .all()
+        )
+        return bookings
+
+    def retrieve_booking_by_id(
+        self,
+        booking_id: int,
+        session: Session = get_session(),
+    ) -> Booking:
+        booking: Optional[Booking] = (
+            session.query(Booking).filter(Booking.id == booking_id).first()
+        )
+        if booking:
+            return booking
+        else:
+            raise EntityNotFoundException("Booking not found!")
+
+    def retrieve_booking_count(
+        self,
+        session: Session = get_session(),
+    ) -> int:
+        return session.query(Booking).count()
+
     def create_booking(
         self,
         first_name: str,
@@ -57,19 +94,6 @@ class BookingService:
         session.add(booking)
         session.commit()
         session.close()
-
-    def retrieve_bookings(
-        self,
-        session: Session = get_session(),
-    ) -> Optional[List[Booking]]:
-        return session.query(Booking).all()
-
-    def retrieve_booking_by_id(
-        self,
-        booking_id: int,
-        session: Session = get_session(),
-    ) -> Optional[Booking]:
-        return session.query(Booking).filter(Booking.id == booking_id).first()
 
     def update_booking(
         self,

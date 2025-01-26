@@ -43,12 +43,12 @@ function saveBooking(event) {
                 // window.location.href = "/";  // ???
                 return response.json();
             } else {
-                const responseWithError = await response.json();
+                const responseWithError = await response.text();
                 throw new Error(responseWithError);
             }
         })
         .then(responseData => {
-            console.log(JSON.parse(responseData));
+            console.log(responseData);
         })
         .catch(error => {
             console.error(JSON.parse(error.message));
