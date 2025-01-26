@@ -54,7 +54,7 @@ for (const [key, value] of formData.entries()) {
 ![CreateBookingIncorrectEmail](./images/POST%20customer%20incorrect%20email.png)
 
 Не верный номер телефона.
-Event
+
 ![CreateBookingIncorrectPhone](./images/POST%20customer%20incorrect%20phone.png)
 
 ### Обновление Booking-а
