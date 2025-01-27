@@ -48,7 +48,6 @@ app.add_url_rule(
     ),
 )
 api.add_resource(BookingResource, "/api/booking/<int:booking_id>")
-app.add_url_rule(rule="/calendar", view_func=CalendarView.as_view(name="calendar"))
 api.add_resource(BookingsResource, "/api/booking")
 api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
 api.add_resource(CustomersResource, "/api/customers")
