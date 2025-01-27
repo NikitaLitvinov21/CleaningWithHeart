@@ -1,0 +1,313 @@
+@charset "UTF-8";
+
+@import url("https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Rubik", sans-serif;
+    font-size: 16px;
+    /* overflow: hidden; */
+}
+
+#calendar {
+    max-width: 1200px;
+    margin: 40px auto;
+
+}
+
+.modal-open,
+.modal {
+    padding: 0 !important;
+}
+
+.modal-content {
+    border-radius: 40px !important;
+    width: 500px;
+    margin: 40px auto;
+}
+
+.modal-window,
+.modal-window * {
+    box-sizing: border-box;
+    transition: all 200ms ease-in-out;
+}
+
+.modal-body {
+    display: flex;
+    align-self: center;
+}
+
+.modal-window-booking {
+    background: #ffffff;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 100%;
+    position: relative;
+    box-shadow: 0px 60px 120px 0px rgba(38, 51, 77, 0.05);
+    width: 500px;
+}
+
+.booking-form {
+    width: 1200px;
+    background-color: #ffffff;
+    margin: auto;
+    box-shadow: 0 0 10px 0 #ABABAB;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-form h3 {
+    margin: 30px 0 20px;
+    font-size: 1.5rem;
+    color: #434343;
+    font-family: "Rubik", sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+    align-self: center;
+}
+
+.add-place-horizontal {
+    align-items: center;
+    display: flex;
+    margin: 10px 0;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.customer-formgroup {
+    width: 220px;
+}
+
+.add-place-customer-input {
+    color: #434343;
+    text-align: left;
+    font-family: "Rubik", sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+    position: relative;
+    outline: none;
+    border: none;
+    width: 220px;
+    border-style: solid;
+    border-color: #dedede;
+    border-width: 2px;
+    border-radius: 5px;
+    height: 33.5px;
+}
+
+.customer-label {
+    color: #434343;
+    padding-bottom: 5px;
+    font-family: "Rubik", sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+}
+
+.line {
+    border: solid 1px #dedede;
+    width: 100%;
+    align-self: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+/* .head {
+    border-style: solid;
+    border-color: #f5f6f7;
+    border-width: 0px 0px 2px 0px;
+    padding: 0px 30px 0px 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-self: stretch;
+    height: 60px;
+    position: relative;
+}
+
+.event-title {
+    color: #434343;
+    text-align: left;
+    font-family: "Rubik", sans-serif;
+    font-size: 1.5rem;
+    line-height: 25px;
+    font-weight: 700;
+    position: relative;
+}
+
+.close-button {
+    background: #ffffff;
+    border-radius: 100px;
+    border-style: solid;
+    border-color: #f5f6f7;
+    border-width: 2px;
+    padding: 3px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0px 2px 10px 0px rgba(38, 51, 77, 0.05);
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+    padding: 0;
+}
+
+.content-booking {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    height: 240px;
+    position: relative;
+}
+
+.add-place {
+    border-style: solid;
+    border-color: #f5f6f7;
+    border-width: 0px 0px 2px 0px;
+    padding: 0px 0px 0px 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+    justify-content: flex-start;
+    align-self: stretch;
+    height: 60px;
+    width: 438px;
+    position: relative;
+}
+
+.add-place-customer-input {
+    color: #434343;
+    text-align: left;
+    font-family: "Rubik", sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+    position: relative;
+    outline: none;
+    border: none;
+    width: 100%;
+}
+
+.add-place-customer-input:user-valid:not(:placeholder-shown) {
+    display: inline;
+    background-image: url("../images/svg/done.svg");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 33px) 50%;
+}
+
+.add-place-customer-input:user-invalid {
+    display: inline;
+    background-image: url("../images/svg/error_outline.svg");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 33px) 50%;
+}
+
+.add-place-customer-input::placeholder {
+    color: #9a9a9a;
+}
+
+.add-place-customer-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(60%);
+    width: 100px;
+}
+
+.modal-footer-button {
+    border: none;
+}
+
+.save-button {
+    background: #8F1616;
+    border-radius: 0px 0px 0px 14px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex: 1;
+}
+
+.save-button:hover {
+    background-color: #a52a2a;
+}
+
+.save-button-text {
+    color: #ffffff;
+    text-align: center;
+    font-family: "Rubik", sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+    position: relative;
+}
+
+.cancel-button {
+    background: rgba(51, 97, 255, 0.05);
+    border-radius: 0px 0px 15px 0px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex: 1;
+}
+
+.cancel-button:hover {
+    background-color: rgb(240, 240, 240);
+}
+
+.cancel-button-text {
+    color: #8F1616;
+    text-align: center;
+    font-family: "Rubik", sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+    position: relative;
+}
+
+.close-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    overflow: visible;
+}
+
+.icon-button {
+    cursor: pointer;
+}
+
+.modal-buttons-footer {
+    display: flex;
+    flex-direction: row;
+    gap: 0px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    position: relative;
+} */
