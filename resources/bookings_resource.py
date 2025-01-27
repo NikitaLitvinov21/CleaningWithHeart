@@ -39,7 +39,7 @@ class BookingsResource(Resource):
                 response=json.dumps({"message": str(e)}),
             )
 
-    @login_required
+    # login not required here!
     @validate_by_booking_scheme()
     def post(self, booking: BookingScheme) -> Response:
 

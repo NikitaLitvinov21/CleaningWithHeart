@@ -49,6 +49,11 @@ function saveBooking(event) {
         })
         .then(responseData => {
             console.log(responseData);
+            document.querySelector("#fleshes").innerHTML = `
+                <div class="alert alert-success">${responseData.message}</div>
+            `;
+            document.querySelector("#saveButton").remove()
+            document.querySelector("#returnButton").classList.remove("d-none")
         })
         .catch(error => {
             console.error(JSON.parse(error.message));
