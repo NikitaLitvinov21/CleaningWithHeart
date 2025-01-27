@@ -26,6 +26,7 @@ protobuf==5.29.1
 psycopg2-binary==2.9.10
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
+pydantic[email]
 pydantic==2.10.3
 pydantic_core==2.27.1
 pyparsing==3.2.0

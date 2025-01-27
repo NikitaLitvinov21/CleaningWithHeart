@@ -73,7 +73,7 @@ for (const [key, value] of formData.entries()) {
 
 ![UpdateBookingIncorrectPhone](./images/Update%20Booking%20Incorrect%20phone.png)
 
-Если передать `user_equipment` как `true`, то в конечном счёте он будет расценен как `false`. Это связано с особенностью реализации описных в пункте `Создание Booking-а`. Пока стоит передавать как `"true"` или не передавать вообще, чтобы было `false`.
+Если передать `use_equipment` как `true`, то в конечном счёте он будет расценен как `false`. Это связано с особенностью реализации описных в пункте `Создание Booking-а`. Пока стоит передавать как `"true"` или не передавать вообще, чтобы было `false`.
 
 ![UpdateBookingWithBoolean](./images/Update%20booking%20with%20boolean.png)
 
