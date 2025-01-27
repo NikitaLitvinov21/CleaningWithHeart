@@ -1,38 +1,58 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
-from datetime import timedelta
-from secrets import token_hex
+
+from os import environ
 
 from dotenv import load_dotenv
 from flask import Flask
-from flask_jwt_extended import JWTManager
+from flask_login import LoginManager, login_required
 from flask_restful import Api
 
+from common.exceptions.error_handling import enable_errorhandlers
 from database.connector import create_tables
 from resources.booking_resource import BookingResource
+from resources.bookings_resource import BookingsResource
+from resources.customer_resource import CustomerResource
+from resources.customers_resource import CustomersResource
+from resources.events_resource import EventsResource
 from resources.login_resource import LoginResource
+from views.booking_view import BookingView
 from views.calendar_view import CalendarView
 from views.index_view import IndexView
 from views.login_view import LoginView
-from views.booking_view import BookingView
+from views.logout_view import LogoutView
 
 load_dotenv()
 create_tables()
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
-app.config["JWT_SECRET_KEY"] = token_hex(32)
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7)
+app.config["SECRET_KEY"] = environ["SECRET_KEY"]
+enable_errorhandlers(app)
+login_manager = LoginManager()
+login_manager.init_app(app=app)
+login_manager.user_loader(LoginResource().load_user)
+login_manager.login_view = "login"
+login_manager.login_message = "Please log in to access this page."
+login_manager.login_message_category = "primary"
 
 api = Api(app=app)
-jwt_manager = JWTManager(app=app)
 
-
-app.add_url_rule(rule="/", view_func=IndexView.as_view(name="index"))
-app.add_url_rule(rule="/login", view_func=LoginView.as_view(name="login"))
-app.add_url_rule(rule="/booking", view_func=BookingView.as_view(name="booking"))
+app.add_url_rule(rule="/", view_func=IndexView.as_view("index"))
+app.add_url_rule(rule="/login", view_func=LoginView.as_view("login"))
+app.add_url_rule(rule="/logout", view_func=LogoutView.as_view("logout"))
+app.add_url_rule(rule="/booking", view_func=BookingView.as_view("booking"))
+app.add_url_rule(
+    rule="/calendar",
+    view_func=login_required(
+        CalendarView.as_view("calendar"),
+    ),
+)
+api.add_resource(BookingResource, "/api/booking/<int:booking_id>")
 app.add_url_rule(rule="/calendar", view_func=CalendarView.as_view(name="calendar"))
-api.add_resource(BookingResource, "/api/booking")
-api.add_resource(LoginResource, "/api/login")
+api.add_resource(BookingsResource, "/api/booking")
+api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
+api.add_resource(CustomersResource, "/api/customers")
+api.add_resource(EventsResource, "/api/events")
 
 
 def main():

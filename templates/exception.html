@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ description }}</title>
+    <meta name="robots" content="noindex, nofollow">
+</head>
+
+<style>
+    body {
+        background-color: #eee;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    table {
+        width: 100%;
+        max-width: 600px;
+    }
+
+    td {
+        vertical-align: middle;
+        text-align: center;
+        font-family: sans-serif;
+    }
+
+    b {
+        font-size: 26px;
+    }
+</style>
+
+<body>
+    <table>
+        <tr>
+            <td>
+                <a href="/">
+                    <img src="{{ url_for('static', filename='images/heart-icon.png') }}" width="120" height="120" alt="Cleaning with Heart">
+                </a>
+                <br>
+                <b>{{ description }}</b>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
