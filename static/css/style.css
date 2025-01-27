@@ -673,7 +673,7 @@ footer {
     align-items: start;
 }
 
-.contact.footer>p {
+.contact.footer > p {
     font-weight: bold;
     color: #434343;
 }
@@ -691,7 +691,7 @@ footer {
 }
 
 .add-place:has(.add-place-customer-input:user-invalid) {
-    border-color: #FF5151;
+    border-color: #ff5151;
 }
 
 .add-place-customer-input::placeholder {
@@ -716,6 +716,7 @@ input[type="number" i] {
     height: 50px;
     margin-bottom: 30px;
     margin-top: 20px;
+    text-decoration: none;
 }
 
 .save-button:hover {
@@ -730,6 +731,10 @@ input[type="number" i] {
     font-weight: 500;
     position: relative;
     font-size: 1.5rem;
+}
+
+a > .save-button-text {
+    line-height: 33px;
 }
 
 /* End index page */
@@ -790,7 +795,7 @@ input.add-place-checkbox {
 .form-control:focus {
     border-color: #a52a2a;
     outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(253, 13, 45, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(253, 13, 45, 0.25);
 }
 
 /* End login page */
@@ -812,7 +817,7 @@ input.add-place-checkbox {
     width: 1200px;
     background-color: #ffffff;
     margin: auto;
-    box-shadow: 0 0 10px 0 #ABABAB;
+    box-shadow: 0 0 10px 0 #ababab;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -901,6 +906,11 @@ input.add-place-checkbox {
 .form-select:focus {
     border-color: #dedede;
     box-shadow: none;
+}
+
+.flashes {
+    width: 85%;
+    margin: 0 auto;
 }
 
 /* End booking page */

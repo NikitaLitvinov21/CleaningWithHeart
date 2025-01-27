@@ -1,5 +1,7 @@
+const form = document.getElementById("bookingForm");
+form.addEventListener("submit", saveBooking);
+
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("bookingForm");
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -7,13 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
     const currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
-    const dateTimeInput = form.querySelector('input[name="datetime_local"]');
+    const dateTimeInput = form.querySelector('input[name="start_datetime"]');
     dateTimeInput.min = currentDateTime;
-    
 });
 
-function saveBooking() {
-    const form = document.getElementById("bookingForm");
+function saveBooking(event) {
+    event.preventDefault();
 
     if (!form.checkValidity()) {
         form.reportValidity();
@@ -37,19 +38,24 @@ function saveBooking() {
         },
         body: JSON.stringify(body),
     })
-        .then(response => {
+        .then(async response => {
             if (response.ok) {
-                window.location.href = "/";
+                // window.location.href = "/";  // ???
                 return response.json();
             } else {
-                throw new Error(response.status);
+                const responseWithError = await response.text();
+                throw new Error(responseWithError);
             }
         })
         .then(responseData => {
             console.log(responseData);
-            return responseData;
+            document.querySelector("#fleshes").innerHTML = `
+                <div class="alert alert-success">${responseData.message}</div>
+            `;
+            document.querySelector("#saveButton").remove()
+            document.querySelector("#returnButton").classList.remove("d-none")
         })
         .catch(error => {
-            console.error("Error requesting - " + error);
+            console.error(JSON.parse(error.message));
         });
 }

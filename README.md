@@ -25,3 +25,9 @@ pip install -r requirements.txt
 ```
 
 Do not forget fill .env. (See .env.example)
+
+## Docs
+
+You can read the documentation in the language convenient for you:
+[**EN**](./docs/restapi-en.md)
+[**RU**](./docs/restapi-ru.md).

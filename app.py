@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
+
 from os import environ
 
 from dotenv import load_dotenv
@@ -7,8 +8,13 @@ from flask import Flask
 from flask_login import LoginManager, login_required
 from flask_restful import Api
 
+from common.exceptions.error_handling import enable_errorhandlers
 from database.connector import create_tables
 from resources.booking_resource import BookingResource
+from resources.bookings_resource import BookingsResource
+from resources.customer_resource import CustomerResource
+from resources.customers_resource import CustomersResource
+from resources.events_resource import EventsResource
 from resources.login_resource import LoginResource
 from views.booking_view import BookingView
 from views.calendar_view import CalendarView
@@ -21,6 +27,7 @@ create_tables()
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config["SECRET_KEY"] = environ["SECRET_KEY"]
+enable_errorhandlers(app)
 login_manager = LoginManager()
 login_manager.init_app(app=app)
 login_manager.user_loader(LoginResource().load_user)
@@ -40,7 +47,11 @@ app.add_url_rule(
         CalendarView.as_view("calendar"),
     ),
 )
-api.add_resource(BookingResource, "/api/booking")
+api.add_resource(BookingResource, "/api/booking/<int:booking_id>")
+api.add_resource(BookingsResource, "/api/booking")
+api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
+api.add_resource(CustomersResource, "/api/customers")
+api.add_resource(EventsResource, "/api/events")
 
 
 def main():

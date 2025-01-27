@@ -32,7 +32,7 @@ class UserService:
 
     def retrieve_user_by_id(
         self,
-        user_id: str,
+        user_id: int,
         session: Session = get_session(),
     ) -> Optional[User]:
         return session.query(User).filter(User.id == user_id).first()
