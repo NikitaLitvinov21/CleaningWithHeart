@@ -29,8 +29,6 @@ function saveBooking(event) {
         body[key] = value;
     }
 
-    console.log(body);
-
     fetch("/api/booking", {
         method: "POST",
         headers: {
@@ -40,7 +38,6 @@ function saveBooking(event) {
     })
         .then(async response => {
             if (response.ok) {
-                // window.location.href = "/";  // ???
                 return response.json();
             } else {
                 const responseWithError = await response.text();

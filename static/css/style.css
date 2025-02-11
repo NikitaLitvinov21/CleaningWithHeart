@@ -49,6 +49,10 @@ input:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0px 40rem #ffff inset;
 }
 
+.alert {
+    margin-bottom: 0;
+}
+
 /* Index page */
 .fixed-header {
     position: fixed;
@@ -700,7 +704,6 @@ footer {
 
 .add-place-customer-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     filter: invert(60%);
-    width: 100px;
 }
 
 input[type="number" i] {
@@ -845,7 +848,7 @@ input.add-place-checkbox {
     border-color: #dedede;
     border-width: 2px;
     border-radius: 5px;
-    padding: 0px 0px 0px 20px;
+    padding: 0px 20px 0px 20px;
     display: flex;
     flex-direction: row;
     gap: 15px;
@@ -1157,10 +1160,6 @@ input.add-place-checkbox {
 }
 
 @media (max-width: 400px) {
-    .add-place-customer-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-        width: 45px;
-    }
-
     .add-place-customer-input:user-valid:not(:placeholder-shown) {
         background-position: calc(100% - 5px) 50%;
     }
