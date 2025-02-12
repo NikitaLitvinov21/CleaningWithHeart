@@ -1,28 +1,29 @@
-import os
-
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
+from config import get_config
 from models.base import Base
 from models.user import User        # noqa
 from models.booking import Booking  # noqa
 
-USERNAME = os.getenv("POSTGRES_USER")
-PASSWORD = os.getenv("POSTGRES_PASSWORD")
-HOST = os.getenv("POSTGRES_HOST")
-PORT = os.getenv("POSTGRES_PORT")
-DATABASE_NAME = os.getenv("POSTGRES_DB")
+database_config = get_config("database")
+
+USERNAME = database_config["user"]
+PASSWORD = database_config["password"]
+HOST = database_config["host"]
+PORT = database_config["port"]
+DATABASE_NAME = database_config["name"]
 
 if not USERNAME or not PASSWORD or not HOST or not PORT or not DATABASE_NAME:
     raise RuntimeError(
-        "Use 'flask run' instead direct run app.py otherwise .env not set!"
+        "Cannot obtain database setting!"
     )
 
 DATABASE_URL = (
     f"postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE_NAME}"
 )
 
-engine: Engine = create_engine(DATABASE_URL)
+engine: Engine = create_engine(DATABASE_URL, echo=database_config["echo"])
 
 session_factory = sessionmaker(engine, expire_on_commit=False)
 

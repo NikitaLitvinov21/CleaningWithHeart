@@ -1,14 +1,12 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from os import environ
-
-from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager, login_required
 from flask_restful import Api
 
 from common.exceptions.error_handling import enable_errorhandlers
+from config import get_config
 from database.connector import create_tables
 from resources.booking_resource import BookingResource
 from resources.bookings_resource import BookingsResource
@@ -22,12 +20,10 @@ from views.index_view import IndexView
 from views.login_view import LoginView
 from views.logout_view import LogoutView
 
-load_dotenv()
 create_tables()
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
-app.config["SECRET_KEY"] = environ["SECRET_KEY"]
-app.config["BYPASS_LOGIN_REQUIRED"] = True
+app.config.update(get_config("flask"))
 enable_errorhandlers(app)
 
 if app.config["BYPASS_LOGIN_REQUIRED"]:
