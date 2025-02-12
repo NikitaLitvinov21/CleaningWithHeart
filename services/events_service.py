@@ -3,6 +3,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
+from common.utils.transaction import transaction
 from database.connector import get_session
 from models.booking import Booking
 from schemes.event_scheme import EventScheme
@@ -10,6 +11,7 @@ from schemes.event_scheme import EventScheme
 
 class EventsService:
 
+    @transaction
     def retrieve_events(
         self,
         start_datetime: datetime,

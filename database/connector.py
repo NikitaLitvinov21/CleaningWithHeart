@@ -1,7 +1,7 @@
 import os
 
 from sqlalchemy import Engine, create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
 from models.base import Base
 from models.user import User        # noqa
@@ -27,7 +27,7 @@ engine: Engine = create_engine(DATABASE_URL)
 session_factory = sessionmaker(engine, expire_on_commit=False)
 
 
-def get_session():
+def get_session() -> Session:
     """Provide a new session for interacting with the database."""
 
     with session_factory() as session:

@@ -3,17 +3,19 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from common.exceptions.entity_not_found_exception import EntityNotFoundException
+from common.utils.transaction import transaction
 from database.connector import get_session
 from models.customer import Customer
 
 
 class CustomerService:
 
+    @transaction
     def retrieve_customers(
         self,
         limit: int,
         page: int,
-        session: Session = get_session(),
+        session: Session,
     ) -> List[Customer]:
         offset_value = (page - 1) * limit
 
@@ -30,22 +32,37 @@ class CustomerService:
     def retrieve_customer_by_id(
         self,
         customer_id: int,
-        session: Session = get_session(),
+        session: Optional[Session] = None,
     ) -> Customer:
-        customer: Optional[Customer] = (
-            session.query(Customer).filter(Customer.id == customer_id).first()
-        )
-        if customer:
-            return customer
-        else:
-            raise EntityNotFoundException("Customer not found!")
+        is_session_created_here: bool = False
+        if session is None:
+            session = get_session()
+            is_session_created_here = True
 
+        try:
+            customer: Optional[Customer] = (
+                session.query(Customer)
+                .filter(
+                    Customer.id == customer_id,
+                )
+                .first()
+            )
+            if customer:
+                return customer
+            else:
+                raise EntityNotFoundException("Customer not found!")
+        finally:
+            if is_session_created_here:
+                session.close()
+
+    @transaction
     def retrieve_customer_count(
         self,
-        session: Session = get_session(),
+        session: Session,
     ) -> int:
         return session.query(Customer).count()
 
+    @transaction
     def create_customer(
         self,
         first_name: str,
@@ -54,7 +71,7 @@ class CustomerService:
         email: str,
         street: str,
         special_notes: Optional[str],
-        session: Session = get_session(),
+        session: Session,
     ) -> None:
         customer = Customer(
             first_name=first_name,
@@ -65,9 +82,8 @@ class CustomerService:
             special_notes=special_notes,
         )
         session.add(customer)
-        session.commit()
-        session.close()
 
+    @transaction
     def update_customer(
         self,
         customer_id: int,
@@ -77,11 +93,10 @@ class CustomerService:
         email: str,
         street: str,
         special_notes: Optional[str],
-        session: Session = get_session(),
+        session: Session,
     ) -> None:
         customer: Optional[Customer] = self.retrieve_customer_by_id(
             customer_id=customer_id,
-            session=session,
         )
         if customer:
             customer.first_name = first_name
@@ -90,15 +105,14 @@ class CustomerService:
             customer.email = email
             customer.street = street
             customer.special_notes = special_notes
-            session.commit()
-            session.close()
         else:
             raise EntityNotFoundException("Customer not found!")
 
+    @transaction
     def delete_customer(
         self,
         customer_id: int,
-        session: Session = get_session(),
+        session: Session,
     ) -> None:
         customer: Optional[Customer] = self.retrieve_customer_by_id(
             customer_id=customer_id,
@@ -106,7 +120,5 @@ class CustomerService:
         )
         if customer:
             session.delete(customer)
-            session.commit()
-            session.close()
         else:
             raise EntityNotFoundException("Customer not found!")

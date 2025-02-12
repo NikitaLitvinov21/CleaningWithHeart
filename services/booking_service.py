@@ -4,6 +4,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from common.exceptions.entity_not_found_exception import EntityNotFoundException
+from common.utils.transaction import transaction
 from database.connector import get_session
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
@@ -12,11 +13,12 @@ from models.booking import Booking
 
 class BookingService:
 
+    @transaction
     def retrieve_bookings(
         self,
         limit: int,
         page: int,
-        session: Session = get_session(),
+        session: Session,
     ) -> List[Booking]:
         offset_value = (page - 1) * limit
 
@@ -33,22 +35,37 @@ class BookingService:
     def retrieve_booking_by_id(
         self,
         booking_id: int,
-        session: Session = get_session(),
+        session: Optional[Session] = None,
     ) -> Booking:
-        booking: Optional[Booking] = (
-            session.query(Booking).filter(Booking.id == booking_id).first()
-        )
-        if booking:
-            return booking
-        else:
-            raise EntityNotFoundException("Booking not found!")
+        is_session_created_here: bool = False
+        if session is None:
+            session = get_session()
+            is_session_created_here = True
 
+        try:
+            booking: Optional[Booking] = (
+                session.query(Booking)
+                .filter(
+                    Booking.id == booking_id,
+                )
+                .first()
+            )
+            if booking:
+                return booking
+            else:
+                raise EntityNotFoundException("Booking not found!")
+        finally:
+            if is_session_created_here:
+                session.close()
+
+    @transaction
     def retrieve_booking_count(
         self,
-        session: Session = get_session(),
+        session: Session,
     ) -> int:
         return session.query(Booking).count()
 
+    @transaction
     def create_booking(
         self,
         first_name: str,
@@ -92,9 +109,8 @@ class BookingService:
             has_own_equipment=has_own_equipment,
         )
         session.add(booking)
-        session.commit()
-        session.close()
 
+    @transaction
     def update_booking(
         self,
         booking_id: int,
@@ -140,11 +156,10 @@ class BookingService:
             booking.rooms_number = rooms_number
             booking.square_feet = square_feet
             booking.has_own_equipment = has_own_equipment
-            session.commit()
-            session.close()
         else:
             raise EntityNotFoundException("Booking not found!")
 
+    @transaction
     def delete_booking(
         self,
         booking_id: int,
@@ -155,7 +170,5 @@ class BookingService:
         )
         if booking:
             session.delete(booking)
-            session.commit()
-            session.close()
         else:
             raise EntityNotFoundException("Booking not found!")

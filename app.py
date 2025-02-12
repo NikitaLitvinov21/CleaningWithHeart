@@ -27,7 +27,12 @@ create_tables()
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config["SECRET_KEY"] = environ["SECRET_KEY"]
+app.config["BYPASS_LOGIN_REQUIRED"] = True
 enable_errorhandlers(app)
+
+if app.config["BYPASS_LOGIN_REQUIRED"]:
+    app.before_request(LoginResource().auto_login)
+
 login_manager = LoginManager()
 login_manager.init_app(app=app)
 login_manager.user_loader(LoginResource().load_user)
@@ -55,7 +60,7 @@ api.add_resource(EventsResource, "/api/events")
 
 
 def main():
-    app.run(debug=True, port=5000)
+    app.run(host="127.0.0.1", port=5000, debug=True)
 
 
 if __name__ == "__main__":

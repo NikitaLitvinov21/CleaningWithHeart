@@ -1,5 +1,6 @@
 from typing import Optional
 
+from flask_login import login_user
 from flask_restful import Resource
 
 from models.user import User
@@ -13,3 +14,8 @@ class LoginResource(Resource):
 
     def load_user(self, user_id) -> Optional[User]:
         return self.user_service.retrieve_user_by_id(user_id=user_id)
+
+    def auto_login(self):
+        user_service = UserService()
+        user = user_service.retrieve_user_by_id(user_id=1)
+        login_user(user)
