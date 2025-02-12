@@ -3,7 +3,7 @@ flask:
     SESSION_COOKIE_HTTPONLY: True
     REMEMBER_COOKIE_HTTPONLY: True
     SESSION_COOKIE_SAMESITE: "Strict"
-    BYPASS_LOGIN_REQUIRED: True
+    BYPASS_LOGIN_REQUIRED: False
 
 database:
     echo: false
