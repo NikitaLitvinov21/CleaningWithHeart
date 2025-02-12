@@ -18,6 +18,7 @@ from resources.events_resource import EventsResource
 from resources.login_resource import LoginResource
 from views.booking_view import BookingView
 from views.calendar_view import CalendarView
+from views.customers_view import CustomersView
 from views.index_view import IndexView
 from views.login_view import LoginView
 from views.logout_view import LogoutView
@@ -47,6 +48,8 @@ app.add_url_rule(
         CalendarView.as_view("calendar"),
     ),
 )
+app.add_url_rule(rule="/customers", view_func=CustomersView.as_view("customers"))
+
 api.add_resource(BookingResource, "/api/booking/<int:booking_id>")
 api.add_resource(BookingsResource, "/api/booking")
 api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
