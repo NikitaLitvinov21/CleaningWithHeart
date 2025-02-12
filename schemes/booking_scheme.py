@@ -32,6 +32,15 @@ class BookingScheme(Scheme):
             strip_whitespace=True,
         ),
     ]
+    cleaning_master_name: Annotated[
+        str,
+        StringConstraints(
+            min_length=0,
+            max_length=255,
+            pattern=str_regexp,
+            strip_whitespace=True,
+        ),
+    ]
     phone_number: Annotated[
         str,
         StringConstraints(
@@ -78,6 +87,7 @@ def validate_by_booking_scheme():
                 email: Union[EmailStr, str] = data.get("email")
                 street: str = data.get("street")
                 start_datetime = datetime.fromisoformat(data.get("start_datetime"))
+                cleaning_master_name: str = data["cleaning_master_name"] or None
                 default_cleaning_duration = timedelta(hours=2)
                 finish_datetime: datetime = (
                     datetime.fromisoformat(data.get("finish_datetime"))
@@ -120,6 +130,7 @@ def validate_by_booking_scheme():
                     has_move_in_cleaning=has_move_in_cleaning,
                     has_move_out_cleaning=has_move_out_cleaning,
                     has_clean_fridge=has_clean_fridge,
+                    cleaning_master_name=cleaning_master_name,
                     building=building,
                     rooms_number=rooms_number,
                     square_feet=square_feet,

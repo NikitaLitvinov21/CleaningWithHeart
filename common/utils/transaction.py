@@ -14,9 +14,9 @@ def transaction(func: Callable) -> Callable:
             result = func(*args, session=session, **kwargs)
             session.commit()
             return result
-        except Exception as e:
+        except Exception:
             session.rollback()
-            raise e
+            raise
         finally:
             session.close()
 

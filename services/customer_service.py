@@ -95,18 +95,16 @@ class CustomerService:
         special_notes: Optional[str],
         session: Session,
     ) -> None:
-        customer: Optional[Customer] = self.retrieve_customer_by_id(
+        customer: Customer = self.retrieve_customer_by_id(
             customer_id=customer_id,
+            session=session,
         )
-        if customer:
-            customer.first_name = first_name
-            customer.last_name = last_name
-            customer.phone_number = phone_number
-            customer.email = email
-            customer.street = street
-            customer.special_notes = special_notes
-        else:
-            raise EntityNotFoundException("Customer not found!")
+        customer.first_name = first_name
+        customer.last_name = last_name
+        customer.phone_number = phone_number
+        customer.email = email
+        customer.street = street
+        customer.special_notes = special_notes
 
     @transaction
     def delete_customer(
@@ -114,11 +112,8 @@ class CustomerService:
         customer_id: int,
         session: Session,
     ) -> None:
-        customer: Optional[Customer] = self.retrieve_customer_by_id(
+        customer: Customer = self.retrieve_customer_by_id(
             customer_id=customer_id,
             session=session,
         )
-        if customer:
-            session.delete(customer)
-        else:
-            raise EntityNotFoundException("Customer not found!")
+        session.delete(customer)

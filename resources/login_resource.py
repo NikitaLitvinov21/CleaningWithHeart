@@ -17,5 +17,6 @@ class LoginResource(Resource):
 
     def auto_login(self):
         user_service = UserService()
-        user = user_service.retrieve_user_by_id(user_id=1)
-        login_user(user)
+        user: Optional[User] = user_service.retrieve_user_by_id(user_id=1)
+        if user:
+            login_user(user)

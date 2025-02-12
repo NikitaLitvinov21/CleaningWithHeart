@@ -4,7 +4,6 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from common.utils.transaction import transaction
-from database.connector import get_session
 from models.booking import Booking
 from schemes.event_scheme import EventScheme
 
@@ -16,7 +15,7 @@ class EventsService:
         self,
         start_datetime: datetime,
         finish_datetime: datetime,
-        session: Session = get_session(),
+        session: Session,
     ) -> List[EventScheme]:
 
         bookings: List[Booking] = (
@@ -27,6 +26,7 @@ class EventsService:
                 Booking.last_name,
                 Booking.start_datetime,
                 Booking.finish_datetime,
+                Booking.selected_service,
             )
             .filter(
                 Booking.start_datetime < finish_datetime,
@@ -39,7 +39,11 @@ class EventsService:
 
         for booking in bookings:
 
-            title = booking.first_name + " " + booking.last_name
+            customer_fullname = booking.first_name + " " + booking.last_name
+
+            title = (
+                customer_fullname + " / " + booking.selected_service.replace("_", " ")
+            )
 
             events.append(
                 EventScheme(

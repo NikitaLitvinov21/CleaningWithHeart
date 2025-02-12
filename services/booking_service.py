@@ -86,7 +86,8 @@ class BookingService:
         rooms_number: int,
         square_feet: int,
         has_own_equipment: bool,
-        session: Session = get_session(),
+        cleaning_master_name: Optional[str],
+        session: Session,
     ) -> None:
         booking = Booking(
             first_name=first_name,
@@ -107,6 +108,7 @@ class BookingService:
             rooms_number=rooms_number,
             square_feet=square_feet,
             has_own_equipment=has_own_equipment,
+            cleaning_master_name=cleaning_master_name,
         )
         session.add(booking)
 
@@ -132,43 +134,39 @@ class BookingService:
         rooms_number: int,
         square_feet: int,
         has_own_equipment: bool,
-        session: Session = get_session(),
+        cleaning_master_name: Optional[str],
+        session: Session,
     ) -> None:
-        booking: Optional[Booking] = self.retrieve_booking_by_id(
+        booking: Booking = self.retrieve_booking_by_id(
             booking_id=booking_id, session=session
         )
-        if booking:
-            booking.first_name = first_name
-            booking.last_name = last_name
-            booking.phone_number = phone_number
-            booking.email = email
-            booking.street = street
-            booking.start_datetime = start_datetime
-            booking.finish_datetime = finish_datetime
-            booking.selected_service = selected_service
-            booking.has_clean_oven = has_clean_oven
-            booking.has_clean_windows = has_clean_windows
-            booking.has_clean_basement = has_clean_basement
-            booking.has_move_in_cleaning = has_move_in_cleaning
-            booking.has_move_out_cleaning = has_move_out_cleaning
-            booking.has_clean_fridge = has_clean_fridge
-            booking.building = building
-            booking.rooms_number = rooms_number
-            booking.square_feet = square_feet
-            booking.has_own_equipment = has_own_equipment
-        else:
-            raise EntityNotFoundException("Booking not found!")
+        booking.first_name = first_name
+        booking.last_name = last_name
+        booking.phone_number = phone_number
+        booking.email = email
+        booking.street = street
+        booking.start_datetime = start_datetime
+        booking.finish_datetime = finish_datetime
+        booking.selected_service = selected_service
+        booking.has_clean_oven = has_clean_oven
+        booking.has_clean_windows = has_clean_windows
+        booking.has_clean_basement = has_clean_basement
+        booking.has_move_in_cleaning = has_move_in_cleaning
+        booking.has_move_out_cleaning = has_move_out_cleaning
+        booking.has_clean_fridge = has_clean_fridge
+        booking.building = building
+        booking.rooms_number = rooms_number
+        booking.square_feet = square_feet
+        booking.has_own_equipment = has_own_equipment
+        booking.cleaning_master_name = cleaning_master_name
 
     @transaction
     def delete_booking(
         self,
         booking_id: int,
-        session: Session = get_session(),
+        session: Session,
     ) -> None:
         booking: Optional[Booking] = self.retrieve_booking_by_id(
             booking_id=booking_id, session=session
         )
-        if booking:
-            session.delete(booking)
-        else:
-            raise EntityNotFoundException("Booking not found!")
+        session.delete(booking)

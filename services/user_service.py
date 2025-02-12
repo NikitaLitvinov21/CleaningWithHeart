@@ -15,11 +15,11 @@ class UserService:
         self,
         username: str,
         password: str,
+        session: Session,
         first_name: Optional[str] = None,
         last_name: Optional[str] = None,
         phone_number: Optional[str] = None,
         email_address: Optional[str] = None,
-        session: Session = get_session(),
     ) -> None:
         user = User(
             username=username,
@@ -35,7 +35,7 @@ class UserService:
     def retrieve_user_by_id(
         self,
         user_id: int,
-        session: Session = get_session(),
+        session: Session,
     ) -> Optional[User]:
         return session.query(User).filter(User.id == user_id).first()
 
@@ -65,7 +65,7 @@ class UserService:
     def is_user_exists(
         self,
         username: str,
-        session: Session = get_session(),
+        session: Session,
     ) -> bool:
         return bool(self.retrieve_user_by_username(username=username, session=session))
 
@@ -73,7 +73,7 @@ class UserService:
         self,
         user: User,
         password: str,
-        session: Session = get_session(),
+        session: Session,
     ) -> bool:
         if not user or not password:
             return False
