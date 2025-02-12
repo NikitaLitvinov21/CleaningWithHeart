@@ -16,7 +16,8 @@ class Customer(Base):
     street: Mapped[str] = mapped_column(String(length=255), nullable=False)
     special_notes: Mapped[Optional[str]] = mapped_column(nullable=True)
 
-    def get_full_name(self):
+    @property
+    def full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
 
     def to_dict(self):
@@ -24,7 +25,7 @@ class Customer(Base):
             "id": self.id,
             "firstName": self.first_name,
             "lastName": self.last_name,
-            "fullName": self.get_full_name(),
+            "fullName": self.full_name,
             "phoneNumber": self.phone_number,
             "email": self.email,
             "street": self.street,

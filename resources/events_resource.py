@@ -1,37 +1,43 @@
+from datetime import datetime
 from typing import List
 
 from flask import Response, json, request
 from flask_login import login_required
 from flask_restful import Resource
 
-from models.booking import Booking
-from services.booking_service import BookingService
+from schemes.event_scheme import EventScheme
+from services.events_service import EventsService
 
 
 class EventsResource(Resource):
 
     def __init__(self):
-        self.booking_service = BookingService()
+        self.events_service = EventsService()
 
     @login_required
     def get(self) -> Response:
+
         try:
-            bookings: List[Booking] = self.booking_service.retrieve_bookings(
-                limit=int(request.args.get("limit", 20)),
-                page=int(request.args.get("page", 1)),
+            start_datetime = datetime.fromisoformat(request.args["start"])
+            finish_datetime = datetime.fromisoformat(request.args["end"])
+        except ValueError:
+            return Response(
+                status=400,
+                content_type="application/json",
+                response=json.dumps({"message": "Incorrect start and end!"}),
             )
-            booking_count: int = self.booking_service.retrieve_booking_count()
+
+        try:
+            events: List[EventScheme] = self.events_service.retrieve_events(
+                start_datetime=start_datetime,
+                finish_datetime=finish_datetime,
+            )
             return Response(
                 status=200,
                 content_type="application/json",
-                response=json.dumps(
-                    {
-                        "events": [booking.as_event() for booking in bookings],
-                        "count": booking_count,
-                    }
-                ),
+                response=json.dumps([event.to_dict() for event in events]),
             )
-        except (ValueError, TypeError) as e:
+        except ValueError as e:
             return Response(
                 status=400,
                 content_type="application/json",

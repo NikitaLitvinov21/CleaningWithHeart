@@ -61,11 +61,3 @@ class Booking(Base):
             "createdAt": datetime_to_iso8601(self.created_at),
             "updatedAt": datetime_to_iso8601(self.updated_at),
         }
-
-    def as_event(self) -> dict:
-        return {
-            "id": self.id,
-            "title": self.first_name + " " + self.last_name,
-            "start": self.start_datetime,
-            "end": self.finish_datetime,
-        }
