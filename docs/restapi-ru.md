@@ -18,6 +18,8 @@
 
 ![GetBookingsWithPage](./images/Get%20booking%20with%20page.png)
 
+![GetBookingsWithMaster](./images/Get%20booking%20with%20master.png)
+
 Ответ:
 
 `bookings` - все Booking-и в рамках страницы.
@@ -151,9 +153,9 @@ for (const [key, value] of formData.entries()) {
 
 Параметры запроса:
 
-`limit` - сколько выводить на страницу (default - 20)
+`start` - start datetime
 
-`page` - какая страница (default - 1)
+`end` - end datetime
 
 Можно использовать `URLSearchParams` в JavaScript для построения запроса.
 

@@ -18,6 +18,8 @@ You can use `URLSearchParams` in JavaScript to build the query.
 
 ![GetBookingsWithPage](./images/Get%20booking%20with%20page.png)
 
+![GetBookingsWithMaster](./images/Get%20booking%20with%20master.png)
+
 Response:
 
 `bookings` - all Bookings within the page.
@@ -151,9 +153,9 @@ Incorrect phone number.
 
 Request parameters:
 
-`limit` - how many items to display per page (default - 20)
+`start` - start datetime
 
-`page` - which page to display (default - 1)
+`end` - end datetime
 
 You can use `URLSearchParams` in JavaScript to build the query.
 

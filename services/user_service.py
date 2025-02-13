@@ -69,6 +69,7 @@ class UserService:
     ) -> bool:
         return bool(self.retrieve_user_by_username(username=username, session=session))
 
+    @transaction
     def validate_user(
         self,
         user: User,

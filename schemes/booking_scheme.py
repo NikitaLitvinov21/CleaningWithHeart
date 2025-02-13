@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Annotated, Union
+from typing import Annotated, Union, Optional
 
 from flask import Response, json, request
 from pydantic import EmailStr, Field, StringConstraints, ValidationError
@@ -32,7 +32,7 @@ class BookingScheme(Scheme):
             strip_whitespace=True,
         ),
     ]
-    cleaning_master_name: Annotated[
+    cleaning_master_name: Optional[Annotated[
         str,
         StringConstraints(
             min_length=0,
@@ -40,7 +40,7 @@ class BookingScheme(Scheme):
             pattern=str_regexp,
             strip_whitespace=True,
         ),
-    ]
+    ]]
     phone_number: Annotated[
         str,
         StringConstraints(
@@ -87,7 +87,7 @@ def validate_by_booking_scheme():
                 email: Union[EmailStr, str] = data.get("email")
                 street: str = data.get("street")
                 start_datetime = datetime.fromisoformat(data.get("start_datetime"))
-                cleaning_master_name: str = data["cleaning_master_name"] or None
+                cleaning_master_name: str = data.get("cleaning_master_name") or None
                 default_cleaning_duration = timedelta(hours=2)
                 finish_datetime: datetime = (
                     datetime.fromisoformat(data.get("finish_datetime"))
