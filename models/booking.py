@@ -15,10 +15,18 @@ class Booking(Base):
     __tablename__ = "bookings"
 
     first_name: Mapped[str] = mapped_column(String(length=32), nullable=False)
-    last_name: Mapped[Optional[str]] = mapped_column(String(length=32), nullable=False)
-    phone_number: Mapped[str] = mapped_column(String(length=11), nullable=False)
+    last_name: Mapped[Optional[str]] = mapped_column(
+        String(length=32),
+        nullable=False,
+    )
+    phone_number: Mapped[str] = mapped_column(
+        String(length=11), nullable=False,
+    )
     email: Mapped[str] = mapped_column(String(length=319), nullable=False)
-    street: Mapped[str]
+    street: Mapped[str] = mapped_column(String(255))
+    cleaning_master_name: Mapped[str] = mapped_column(
+        String(length=64), nullable=True,
+    )
     start_datetime: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False
     )
@@ -44,6 +52,7 @@ class Booking(Base):
             "lastName": self.last_name,
             "phoneNumber": self.phone_number,
             "email": self.email,
+            "cleaningMasterName": self.cleaning_master_name,
             "street": self.street,
             "startDatetime": datetime_to_iso8601(self.start_datetime),
             "finishDatetime": datetime_to_iso8601(self.finish_datetime),
@@ -60,12 +69,4 @@ class Booking(Base):
             # ? Inherit from Base
             "createdAt": datetime_to_iso8601(self.created_at),
             "updatedAt": datetime_to_iso8601(self.updated_at),
-        }
-
-    def as_event(self) -> dict:
-        return {
-            "id": self.id,
-            "title": self.first_name + " " + self.last_name,
-            "start": self.start_datetime,
-            "end": self.finish_datetime,
         }

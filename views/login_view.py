@@ -2,7 +2,7 @@ from typing import Optional
 
 from flask import render_template, request, redirect, url_for, flash
 from flask.views import View
-from flask_login import login_user
+from flask_login import login_user, current_user
 from werkzeug.datastructures import ImmutableMultiDict
 
 from models.user import User
@@ -31,5 +31,8 @@ class LoginView(View):
                 return redirect(url_for("calendar"))
             else:
                 flash("Wrong username or password!", category="warning")
+
+        if current_user.is_authenticated:
+            return redirect(url_for("calendar"))
 
         return render_template("login.html")
