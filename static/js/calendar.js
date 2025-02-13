@@ -22,14 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         initialView: 'timeGridWeek',
         eventColor: '#2c3e50',
-        events: [
-            { id: '1', title: 'Event 1', start: '2025-01-10T14:00:00', end: '2025-01-10T16:00:00' },
-            { id: '2', title: 'Event 2', start: '2025-01-11T10:00:00', end: '2025-01-11T11:00:00' },
-            { id: '3', title: 'Event 3', start: '2025-01-11T10:00:00', end: '2025-01-11T11:00:00' },
-            { id: '4', title: 'Event 4', start: '2025-01-11T10:00:00', end: '2025-01-11T11:00:00' },
-            { id: '5', title: 'Event 5', start: '2025-01-11T10:00:00', end: '2025-01-11T11:00:00' },
-            { id: '6', title: 'Event 6', start: '2025-01-11T10:00:00', end: '2025-01-11T11:00:00' }
-        ],
+        events: "http://127.0.0.1:5000/api/events",
         eventClick: function (info) {
             showPopover(info.el, info.event);
         },

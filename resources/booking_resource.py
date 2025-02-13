@@ -55,6 +55,7 @@ class BookingResource(Resource):
                 rooms_number=booking.rooms_number,
                 square_feet=booking.square_feet,
                 has_own_equipment=booking.has_own_equipment,
+                cleaning_master_name=booking.cleaning_master_name,
             )
             return Response(
                 status=200,

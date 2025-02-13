@@ -18,6 +18,8 @@
 
 ![GetBookingsWithPage](./images/Get%20booking%20with%20page.png)
 
+![GetBookingsWithMaster](./images/Get%20booking%20with%20master.png)
+
 Ответ:
 
 `bookings` - все Booking-и в рамках страницы.
@@ -73,7 +75,7 @@ for (const [key, value] of formData.entries()) {
 
 ![UpdateBookingIncorrectPhone](./images/Update%20Booking%20Incorrect%20phone.png)
 
-Если передать `user_equipment` как `true`, то в конечном счёте он будет расценен как `false`. Это связано с особенностью реализации описных в пункте `Создание Booking-а`. Пока стоит передавать как `"true"` или не передавать вообще, чтобы было `false`.
+Если передать `use_equipment` как `true`, то в конечном счёте он будет расценен как `false`. Это связано с особенностью реализации описных в пункте `Создание Booking-а`. Пока стоит передавать как `"true"` или не передавать вообще, чтобы было `false`.
 
 ![UpdateBookingWithBoolean](./images/Update%20booking%20with%20boolean.png)
 
@@ -151,9 +153,9 @@ for (const [key, value] of formData.entries()) {
 
 Параметры запроса:
 
-`limit` - сколько выводить на страницу (default - 20)
+`start` - start datetime
 
-`page` - какая страница (default - 1)
+`end` - end datetime
 
 Можно использовать `URLSearchParams` в JavaScript для построения запроса.
 

@@ -1,0 +1,14 @@
+flask:
+    SECRET_KEY: !ENV ${SECRET_KEY:a25cc816ab5ca48f7634a8b095jf1df51}
+    SESSION_COOKIE_HTTPONLY: True
+    REMEMBER_COOKIE_HTTPONLY: True
+    SESSION_COOKIE_SAMESITE: "Strict"
+    BYPASS_LOGIN_REQUIRED: False
+
+database:
+    echo: false
+    name: !ENV ${POSTGRES_DB:cleaning_with_heart}
+    user: !ENV ${POSTGRES_USER:postgres}
+    password: !ENV ${POSTGRES_PASSWORD:postgres}
+    host: !ENV ${POSTGRES_HOST:localhost}
+    port: !ENV ${POSTGRES_PORT:5432}

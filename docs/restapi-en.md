@@ -18,6 +18,8 @@ You can use `URLSearchParams` in JavaScript to build the query.
 
 ![GetBookingsWithPage](./images/Get%20booking%20with%20page.png)
 
+![GetBookingsWithMaster](./images/Get%20booking%20with%20master.png)
+
 Response:
 
 `bookings` - all Bookings within the page.
@@ -73,7 +75,7 @@ Incorrect phone number.
 
 ![UpdateBookingIncorrectPhone](./images/Update%20Booking%20Incorrect%20phone.png)
 
-If you pass `user_equipment` as `true`, it will ultimately be treated as `false`. This is due to the implementation features described in the "Creating a Booking" section. For now, you should pass it as `"true"` or not pass it at all to have it as `false`.
+If you pass `use_equipment` as `true`, it will ultimately be treated as `false`. This is due to the implementation features described in the "Creating a Booking" section. For now, you should pass it as `"true"` or not pass it at all to have it as `false`.
 
 ![UpdateBookingWithBoolean](./images/Update%20booking%20with%20boolean.png)
 
@@ -151,9 +153,9 @@ Incorrect phone number.
 
 Request parameters:
 
-`limit` - how many items to display per page (default - 20)
+`start` - start datetime
 
-`page` - which page to display (default - 1)
+`end` - end datetime
 
 You can use `URLSearchParams` in JavaScript to build the query.
 
