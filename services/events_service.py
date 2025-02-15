@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from common.utils.transaction import transaction
 from models.booking import Booking
@@ -20,14 +20,7 @@ class EventsService:
 
         bookings: List[Booking] = (
             session.query(Booking)
-            .with_entities(
-                Booking.id,
-                Booking.first_name,
-                Booking.last_name,
-                Booking.start_datetime,
-                Booking.finish_datetime,
-                Booking.selected_service,
-            )
+            .options(joinedload(Booking.customer))
             .filter(
                 Booking.start_datetime < finish_datetime,
                 Booking.finish_datetime > start_datetime,
@@ -39,11 +32,11 @@ class EventsService:
 
         for booking in bookings:
 
-            customer_fullname = booking.first_name + " " + booking.last_name
+            customer_fullname = booking.customer.full_name
 
-            title = (
-                customer_fullname + " / " + booking.selected_service.replace("_", " ")
-            )
+            selected_service = booking.selected_service.replace("_", " ")
+
+            title = customer_fullname + " / " + selected_service
 
             events.append(
                 EventScheme(
