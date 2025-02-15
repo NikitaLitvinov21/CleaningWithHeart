@@ -3,10 +3,10 @@ flask:
     SESSION_COOKIE_HTTPONLY: True
     REMEMBER_COOKIE_HTTPONLY: True
     SESSION_COOKIE_SAMESITE: "Strict"
-    BYPASS_LOGIN_REQUIRED: False
+    BYPASS_LOGIN_REQUIRED: !ENV ${BYPASS_LOGIN_REQUIRED:False}
 
 database:
-    echo: false
+    echo: False
     name: !ENV ${POSTGRES_DB:cleaning_with_heart}
     user: !ENV ${POSTGRES_USER:postgres}
     password: !ENV ${POSTGRES_PASSWORD:postgres}

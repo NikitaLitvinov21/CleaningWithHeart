@@ -52,11 +52,11 @@ class BookingsResource(Resource):
 
         try:
             data: dict = request.json
-            customer_id = (
+            customer_id: Optional[int] = (
                 int(
                     data["customerId"],
                 )
-                if data["customerId"]
+                if data.get("customerId")
                 else None
             )
             first_name: str = data.get("firstName")

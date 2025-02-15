@@ -28,6 +28,5 @@ Do not forget fill .env. (See .env.example)
 
 ## Docs
 
-You can read the documentation in the language convenient for you:
-[**EN**](./docs/restapi-en.md)
+You can read the documentation:
 [**RU**](./docs/restapi-ru.md).
