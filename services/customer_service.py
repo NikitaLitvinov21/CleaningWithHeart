@@ -63,6 +63,18 @@ class CustomerService:
         return session.query(Customer).count()
 
     @transaction
+    def retrieve_customer_id_by_phone_number(
+        self,
+        phone_number: str,
+        session: Session,
+    ) -> Optional[int]:
+        return (
+            session.query(Customer.id)
+            .filter(Customer.phone_number == phone_number)
+            .scalar()
+        )
+
+    @transaction
     def create_customer(
         self,
         first_name: str,
@@ -70,9 +82,9 @@ class CustomerService:
         phone_number: str,
         email: str,
         street: str,
-        special_notes: Optional[str],
         session: Session,
-    ) -> None:
+        special_notes: Optional[str] = None,
+    ) -> Customer:
         customer = Customer(
             first_name=first_name,
             last_name=last_name,
@@ -82,6 +94,7 @@ class CustomerService:
             special_notes=special_notes,
         )
         session.add(customer)
+        return customer
 
     @transaction
     def update_customer(
@@ -92,8 +105,8 @@ class CustomerService:
         phone_number: str,
         email: str,
         street: str,
-        special_notes: Optional[str],
         session: Session,
+        special_notes: Optional[str] = None,
     ) -> None:
         customer: Customer = self.retrieve_customer_by_id(
             customer_id=customer_id,

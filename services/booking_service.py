@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from common.exceptions.entity_not_found_exception import EntityNotFoundException
 from common.utils.transaction import transaction
@@ -24,6 +24,7 @@ class BookingService:
 
         bookings: List[Booking] = (
             session.query(Booking)
+            .options(joinedload(Booking.customer))
             .limit(
                 limit=limit,
             )
@@ -45,6 +46,7 @@ class BookingService:
         try:
             booking: Optional[Booking] = (
                 session.query(Booking)
+                .options(joinedload(Booking.customer))
                 .filter(
                     Booking.id == booking_id,
                 )
@@ -68,11 +70,7 @@ class BookingService:
     @transaction
     def create_booking(
         self,
-        first_name: str,
-        last_name: str,
-        phone_number: str,
-        email: str,
-        street: str,
+        customer_id: int,
         start_datetime: datetime,
         finish_datetime: datetime,
         selected_service: SelectedService,
@@ -90,11 +88,7 @@ class BookingService:
         session: Session,
     ) -> None:
         booking = Booking(
-            first_name=first_name,
-            last_name=last_name,
-            phone_number=phone_number,
-            email=email,
-            street=street,
+            customer_id=customer_id,
             start_datetime=start_datetime,
             finish_datetime=finish_datetime,
             selected_service=selected_service,
@@ -116,11 +110,7 @@ class BookingService:
     def update_booking(
         self,
         booking_id: int,
-        first_name: str,
-        last_name: str,
-        phone_number: str,
-        email: str,
-        street: str,
+        customer_id: int,
         start_datetime: datetime,
         finish_datetime: datetime,
         selected_service: SelectedService,
@@ -140,11 +130,7 @@ class BookingService:
         booking: Booking = self.retrieve_booking_by_id(
             booking_id=booking_id, session=session
         )
-        booking.first_name = first_name
-        booking.last_name = last_name
-        booking.phone_number = phone_number
-        booking.email = email
-        booking.street = street
+        booking.customer_id = customer_id
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
         booking.selected_service = selected_service
@@ -159,6 +145,20 @@ class BookingService:
         booking.square_feet = square_feet
         booking.has_own_equipment = has_own_equipment
         booking.cleaning_master_name = cleaning_master_name
+
+    @transaction
+    def update_booking_range(
+        self,
+        booking_id: int,
+        start_datetime: datetime,
+        finish_datetime: datetime,
+        session: Session,
+    ) -> None:
+        booking: Booking = self.retrieve_booking_by_id(
+            booking_id=booking_id, session=session
+        )
+        booking.start_datetime = start_datetime
+        booking.finish_datetime = finish_datetime
 
     @transaction
     def delete_booking(
