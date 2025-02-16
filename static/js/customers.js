@@ -114,25 +114,125 @@ function updateCustomersTable(customers) {
             <td class="expand-column text-center">${customer.specialNotes || "-"}</td>
             <td class="expand-column text-center">
                 <span class="ceil-text text-nowrap">
-                    <img src="/static/images/svg/edit-icon.svg" alt="edit-icon" class="edit-icon icon-button" data-event-id="${customer.id}">
-                    <img src="/static/images/svg/delete-icon.svg" alt="delete-icon" class="delete-icon icon-button" data-event-id="${customer.id}">
+                    <img src="/static/images/svg/edit-icon.svg" alt="edit-icon" 
+                        class="edit-icon icon-button" data-customer-id="${customer.id}">
+                    <img src="/static/images/svg/delete-icon.svg" alt="delete-icon" 
+                        class="delete-icon icon-button" data-customer-id="${customer.id}">
                 </span>
             </td>
         `;
         tbody.appendChild(row);
     });
 
-    // document.querySelectorAll(".edit-icon").forEach(icon => {
-    //     icon.addEventListener("click", function () {
-    //         const eventId = this.dataset.eventId;
-    //         window.location.href = `/calendar/${eventId}/edit`;
-    //     });
-    // });
+    document.querySelectorAll(".edit-icon").forEach(icon => {
+        icon.addEventListener("click", function () {
+            const customerId = this.dataset.customerId;
+            openEditModal(customerId);
+        });
+    });
 
-    // document.querySelectorAll(".delete-icon").forEach(icon => {
-    //     icon.addEventListener("click", function () {
-    //         const eventId = this.dataset.eventId;
-    //         deleteEventPrompt(eventId);
-    //     });
-    // });
+    document.querySelectorAll(".delete-icon").forEach(icon => {
+        icon.addEventListener("click", function () {
+            const customerId = this.dataset.customerId;
+            openDeleteModal(customerId);
+        });
+    });
+}
+
+function openEditModal(customerId) {
+    fetch(`/api/customers/${customerId}`)
+        .then(response => response.json())
+        .then(customer => {
+            document.querySelector("input[name='first_name']").value = customer.firstName;
+            document.querySelector("input[name='last_name']").value = customer.lastName;
+            document.querySelector("input[name='phone_number']").value = customer.phoneNumber;
+            document.querySelector("input[name='email']").value = customer.email;
+            document.querySelector("input[name='street']").value = customer.street;
+            document.querySelector("input[name='notes']").value = customer.specialNotes || "";
+            document.querySelector("#edit-button").setAttribute("data-customer-id", customerId);
+            new bootstrap.Modal(document.getElementById("customerModal")).show();
+        })
+        .catch(error => console.error("Error loading customer data:", error));
+}
+
+function openDeleteModal(customerId) {
+    document.querySelector("#delete-button").setAttribute("data-customer-id", customerId);
+    new bootstrap.Modal(document.getElementById("deleteModal")).show();
+}
+
+document.querySelector("#edit-button").addEventListener("click", function () {
+    const customerId = this.getAttribute("data-customer-id");
+    editCustomer(customerId);
+});
+
+document.querySelector("#delete-button").addEventListener("click", function () {
+    const customerId = this.getAttribute("data-customer-id");
+    deleteCustomer(customerId);
+});
+
+function editCustomer(customerId) {
+    const form = document.getElementById("customerForm");
+
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    const firstName = document.querySelector("input[name='first_name']").value;
+    const lastName = document.querySelector("input[name='last_name']").value;
+    const phoneNumber = document.querySelector("input[name='phone_number']").value;
+    const email = document.querySelector("input[name='email']").value;
+    const street = document.querySelector("input[name='street']").value;
+    const specialNotes = document.querySelector("input[name='notes']").value;
+
+    const updatedCustomer = {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        email: email,
+        street: street,
+        specialNotes: specialNotes,
+    };
+
+    fetch(`/api/customers/${customerId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedCustomer),
+    })
+        .then(async response => {
+            if (response.ok) {
+                window.location.reload();
+                return response.json();
+            } else {
+                const responseWithError = await response.text();
+                throw new Error(responseWithError);
+            }
+        })
+        .then(responseData => {
+            console.log(responseData);
+            return responseData;
+        })
+        .catch(error => {
+            console.error(JSON.parse(error.message));
+        });
+}
+
+function deleteCustomer(customerId) {
+    fetch(`/api/customers/${customerId}`, {
+        method: "DELETE",
+    })
+        .then(async response => {
+            if (response.ok) {
+                window.location.reload();
+                return response.json();
+            } else {
+                const responseWithError = await response.text();
+                throw new Error(responseWithError);
+            }
+        })
+        .catch(error => {
+            console.error(JSON.parse(error.message));
+        });
 }
