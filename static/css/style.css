@@ -51,6 +51,11 @@ input:-webkit-autofill:focus {
 
 .alert {
     margin-bottom: 0;
+    margin-top: 10px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    font-weight: 500;
 }
 
 /* Index page */
