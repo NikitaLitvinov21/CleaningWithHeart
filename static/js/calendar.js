@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const urlBase = location.protocol + '//' + location.host;
     const calendarEl = document.getElementById('calendar');
     let currentPopover = null;
 
@@ -12,23 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
         nowIndicator: true,
         views: {
             timeGrid: {
-                eventMaxStack: 3
-            }
+                eventMaxStack: 3,
+            },
         },
         headerToolbar: {
-            start: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-            center: 'title',
-            end: 'prev,next today',
+            start: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+            center: "title",
+            end: "prev,next today",
         },
-        initialView: 'timeGridWeek',
-        eventColor: '#2c3e50',
-        events: "http://127.0.0.1:5000/api/events",
+        initialView: "timeGridWeek",
+        eventColor: "#2c3e50",
+        events: `${urlBase}/api/events`,
         eventClick: function (info) {
             showPopover(info.el, info.event);
         },
         select: function (info) {
             openSaveModal(info);
-        }
+        },
     });
 
     calendar.render();
