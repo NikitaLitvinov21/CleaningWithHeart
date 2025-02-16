@@ -19,6 +19,7 @@ from views.calendar_view import CalendarView
 from views.index_view import IndexView
 from views.login_view import LoginView
 from views.logout_view import LogoutView
+from workers.twilio_worker import TwilioWorker
 
 create_tables()
 
@@ -53,6 +54,9 @@ api.add_resource(BookingsResource, "/api/booking")
 api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
 api.add_resource(CustomersResource, "/api/customers")
 api.add_resource(EventsResource, "/api/events")
+
+twilio_worker = TwilioWorker(get_config("twilio"))
+twilio_worker.run()
 
 
 def main():

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional
 
 from sqlalchemy.orm import Session, joinedload
@@ -32,6 +32,27 @@ class BookingService:
             .all()
         )
         return bookings
+
+    @transaction
+    def retrieve_all_bookings(
+        self,
+        session: Session,
+        older_then: Optional[datetime] = None,
+        only_not_notified: Optional[datetime] = False,
+    ) -> List[Booking]:
+        query = session.query(Booking).options(joinedload(Booking.customer))
+
+        if older_then:
+            query = query.filter(
+                Booking.start_datetime - timedelta(hours=1) < older_then,
+            )
+
+        if only_not_notified:
+            query = query.filter(
+                Booking.has_customer_been_notified == False,  # noqa
+            )
+
+        return query.all()
 
     def retrieve_booking_by_id(
         self,
@@ -159,6 +180,18 @@ class BookingService:
         )
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
+
+    @transaction
+    def set_as_notified(
+        self,
+        booking_id: int,
+        has_customer_been_notified: bool,
+        session: Session,
+    ) -> None:
+        booking: Booking = self.retrieve_booking_by_id(
+            booking_id=booking_id, session=session
+        )
+        booking.has_customer_been_notified = has_customer_been_notified
 
     @transaction
     def delete_booking(
