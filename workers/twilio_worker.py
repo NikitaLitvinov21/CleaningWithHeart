@@ -32,7 +32,7 @@ class TwilioWorker:
                     current_time=datetime_now, only_not_notified=True
                 )
                 for booking in bookings:
-                    print(booking.to_dict())
+                    print(f"TwilioWorker catch {booking.to_dict()}")
                     customer = booking.customer
                     if customer and customer.phone_number:
                         self.booking_service.set_as_notified(
