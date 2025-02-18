@@ -24,6 +24,9 @@ class Booking(Base):
     finish_datetime: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False
     )
+    notify_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
     selected_service: Mapped[SelectedService]
     has_clean_oven: Mapped[bool]
     has_clean_windows: Mapped[bool]

@@ -37,14 +37,15 @@ class BookingService:
     def retrieve_all_bookings(
         self,
         session: Session,
-        older_then: Optional[datetime] = None,
+        current_time: Optional[datetime] = None,
         only_not_notified: Optional[datetime] = False,
     ) -> List[Booking]:
         query = session.query(Booking).options(joinedload(Booking.customer))
 
-        if older_then:
+        if current_time:
             query = query.filter(
-                Booking.start_datetime - timedelta(hours=1) < older_then,
+                Booking.notify_at < current_time,
+                Booking.start_datetime > current_time,
             )
 
         if only_not_notified:
@@ -81,6 +82,9 @@ class BookingService:
             if is_session_created_here:
                 session.close()
 
+    def calculate_notify_at(self, start_datetime: datetime) -> datetime:
+        return start_datetime - timedelta(hours=1)
+
     @transaction
     def retrieve_booking_count(
         self,
@@ -112,6 +116,7 @@ class BookingService:
             customer_id=customer_id,
             start_datetime=start_datetime,
             finish_datetime=finish_datetime,
+            notify_at=self.calculate_notify_at(start_datetime),
             selected_service=selected_service,
             has_clean_oven=has_clean_oven,
             has_clean_windows=has_clean_windows,
@@ -154,6 +159,7 @@ class BookingService:
         booking.customer_id = customer_id
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
+        booking.notify_at = self.calculate_notify_at(start_datetime)
         booking.selected_service = selected_service
         booking.has_clean_oven = has_clean_oven
         booking.has_clean_windows = has_clean_windows
@@ -166,6 +172,7 @@ class BookingService:
         booking.square_feet = square_feet
         booking.has_own_equipment = has_own_equipment
         booking.cleaning_master_name = cleaning_master_name
+        booking.has_customer_been_notified = False
 
     @transaction
     def update_booking_range(
@@ -180,13 +187,15 @@ class BookingService:
         )
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
+        booking.notify_at = self.calculate_notify_at(start_datetime)
+        booking.has_customer_been_notified = False
 
     @transaction
     def set_as_notified(
         self,
         booking_id: int,
-        has_customer_been_notified: bool,
         session: Session,
+        has_customer_been_notified: bool = True,
     ) -> None:
         booking: Booking = self.retrieve_booking_by_id(
             booking_id=booking_id, session=session
