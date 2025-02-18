@@ -16,12 +16,21 @@ class CustomerService:
         limit: int,
         page: int,
         session: Session,
+        only_names: bool = False,
     ) -> List[Customer]:
         offset_value = (page - 1) * limit
 
+        if only_names:
+            query = session.query(
+                Customer.id,
+                Customer.first_name,
+                Customer.last_name,
+            )
+        else:
+            query = session.query(Customer)
+
         customers: List[Customer] = (
-            session.query(Customer)
-            .limit(
+            query.limit(
                 limit=limit,
             )
             .offset(offset_value)

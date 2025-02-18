@@ -26,7 +26,6 @@ class TwilioWorker:
 
     def sending_message(self) -> NoReturn:
         while True:
-            print("TwilioWorker: next iteration")
             try:
                 datetime_now = datetime.now(tz=timezone.utc)
                 bookings: list = self.booking_service.retrieve_all_bookings(
