@@ -60,11 +60,13 @@
 
 `page` - какая страница (page - 1)
 
+`only_names` - логический параметр, что указывает на получении только имён и id.
+
 Можно использовать `URLSearchParams` в JavaScript для построения запроса.
 
 ![GetCustomers](./images/Get%20customers.png)
 
-![GetCustomersWithParams](./images/Get%20customers%20with%20params.png)
+![GetCustomersWithParamsOnlyNames](./images/Get%20customers%20only%20names.png)
 
 ![GetCustomersWithParamsCount](./images/Get%20customers%20with%20params%20count.png)
 
@@ -133,3 +135,30 @@
 `events` - все Event-ы в рамках страницы.
 
 `count` - общее количество всех Booking-ов.
+
+## Масив адресов
+
+### Получение массива адресов
+
+Параметры запроса:
+
+`search` - сам поисковой запрос, что вводит пользователь.
+
+![GetAddresses](./images/Get%20addresses.png)
+
+![GetAddresses2](./images/Get%20addresses%202.png)
+
+![GetAddresses3](./images/Get%20addresses%203.png)
+
+Пример кода:
+
+```javascript
+const urlBase = location.protocol + "//" + location.host;
+
+const params = new URLSearchParams({
+    search: value,
+});
+
+fetch(`${urlBase}/api/addresses?${params}`).
+//... existing code ...
+```
