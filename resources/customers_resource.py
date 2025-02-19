@@ -56,6 +56,20 @@ class CustomersResource(Resource):
     @login_required
     @validate_by_customer_scheme()
     def post(self, customer: CustomerScheme) -> Response:
+        if self.customer_service.is_customer_exists(
+            phone_number=customer.phone_number,
+        ):
+            message = "The customer with this phone number already exists!"
+            return Response(
+                status=409,
+                content_type="application/json",
+                response=json.dumps(
+                    {
+                        "message": message,
+                    },
+                ),
+            )
+
         self.customer_service.create_customer(
             first_name=customer.first_name,
             last_name=customer.last_name,

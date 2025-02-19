@@ -65,6 +65,18 @@ class CustomerService:
                 session.close()
 
     @transaction
+    def is_customer_exists(
+        self,
+        phone_number: str,
+        session: Session,
+    ) -> bool:
+        return bool(
+            session.query(Customer.id)
+            .filter(Customer.phone_number == phone_number)
+            .first()
+        )
+
+    @transaction
     def retrieve_customer_count(
         self,
         session: Session,
