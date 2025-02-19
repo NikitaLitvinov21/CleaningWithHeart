@@ -1,10 +1,16 @@
 from sys import argv
 
-from common.utils.load_env_file import load_env_file  # noqa: Must be first!
+from dotenv import load_dotenv
+
 from commands.user_creation_command import UserCreationCommand
 
-match argv[1]:
-    case "create_user":
-        UserCreationCommand()
-    case _:
-        print("Incorrect command")
+load_dotenv()
+
+try:
+    match argv[1]:
+        case "create_user":
+            UserCreationCommand()
+        case _:
+            print("Incorrect command")
+except IndexError:
+    print("The command required!")

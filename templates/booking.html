@@ -87,9 +87,11 @@
                                 <div class="add-place">
                                     <img src="{{ url_for('static', filename='images/svg/street_customer.svg') }}"
                                         alt="street_customer" class="street_customer">
-                                    <input type="text" name="street" class="add-place-customer-input" maxlength="50"
+                                    <input type="text" name="street" id="addressInput"
+                                    class="add-place-customer-input" maxlength="50"
                                         placeholder="Street" required value="">
                                 </div>
+                                <div class="addresses-suggestions" id="addressesSuggestions"></div>
                             </div>
                             <div class="customer-formgroup">
                                 <label class="customer-label">Date and Time*</label>

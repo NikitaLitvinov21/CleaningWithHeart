@@ -67,7 +67,7 @@ class UserService:
         username: str,
         session: Session,
     ) -> bool:
-        return bool(self.retrieve_user_by_username(username=username, session=session))
+        return bool(session.query(User.id).filter(User.username == username).first())
 
     @transaction
     def validate_user(

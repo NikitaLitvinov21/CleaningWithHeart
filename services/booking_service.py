@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional
 
 from sqlalchemy.orm import Session, joinedload
 
-from common.exceptions.entity_not_found_exception import EntityNotFoundException
+from common.exceptions.entity_not_found_exception import EntityNotFoundError
 from common.utils.transaction import transaction
 from database.connector import get_session
 from enums.building_type import BuildingType
@@ -33,6 +33,28 @@ class BookingService:
         )
         return bookings
 
+    @transaction
+    def retrieve_all_bookings(
+        self,
+        session: Session,
+        current_time: Optional[datetime] = None,
+        only_not_notified: Optional[datetime] = False,
+    ) -> List[Booking]:
+        query = session.query(Booking).options(joinedload(Booking.customer))
+
+        if current_time:
+            query = query.filter(
+                Booking.notify_at < current_time,
+                Booking.start_datetime > current_time,
+            )
+
+        if only_not_notified:
+            query = query.filter(
+                Booking.has_customer_been_notified == False,  # noqa
+            )
+
+        return query.all()
+
     def retrieve_booking_by_id(
         self,
         booking_id: int,
@@ -55,10 +77,13 @@ class BookingService:
             if booking:
                 return booking
             else:
-                raise EntityNotFoundException("Booking not found!")
+                raise EntityNotFoundError("Booking not found!")
         finally:
             if is_session_created_here:
                 session.close()
+
+    def calculate_notify_at(self, start_datetime: datetime) -> datetime:
+        return start_datetime - timedelta(hours=1)
 
     @transaction
     def retrieve_booking_count(
@@ -91,6 +116,7 @@ class BookingService:
             customer_id=customer_id,
             start_datetime=start_datetime,
             finish_datetime=finish_datetime,
+            notify_at=self.calculate_notify_at(start_datetime),
             selected_service=selected_service,
             has_clean_oven=has_clean_oven,
             has_clean_windows=has_clean_windows,
@@ -133,6 +159,7 @@ class BookingService:
         booking.customer_id = customer_id
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
+        booking.notify_at = self.calculate_notify_at(start_datetime)
         booking.selected_service = selected_service
         booking.has_clean_oven = has_clean_oven
         booking.has_clean_windows = has_clean_windows
@@ -145,6 +172,7 @@ class BookingService:
         booking.square_feet = square_feet
         booking.has_own_equipment = has_own_equipment
         booking.cleaning_master_name = cleaning_master_name
+        booking.has_customer_been_notified = False
 
     @transaction
     def update_booking_range(
@@ -159,6 +187,20 @@ class BookingService:
         )
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
+        booking.notify_at = self.calculate_notify_at(start_datetime)
+        booking.has_customer_been_notified = False
+
+    @transaction
+    def set_as_notified(
+        self,
+        booking_id: int,
+        session: Session,
+        has_customer_been_notified: bool = True,
+    ) -> None:
+        booking: Booking = self.retrieve_booking_by_id(
+            booking_id=booking_id, session=session
+        )
+        booking.has_customer_been_notified = has_customer_been_notified
 
     @transaction
     def delete_booking(

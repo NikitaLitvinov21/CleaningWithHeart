@@ -8,6 +8,7 @@ from flask_restful import Api
 from common.exceptions.error_handling import enable_errorhandlers
 from config import get_config
 from database.connector import create_tables
+from resources.addresses_resource import AddressesResource
 from resources.booking_resource import BookingResource
 from resources.bookings_resource import BookingsResource
 from resources.customer_resource import CustomerResource
@@ -20,6 +21,7 @@ from views.customers_view import CustomersView
 from views.index_view import IndexView
 from views.login_view import LoginView
 from views.logout_view import LogoutView
+from workers.twilio_worker import TwilioWorker
 
 create_tables()
 
@@ -28,6 +30,7 @@ app.config.update(get_config("flask"))
 enable_errorhandlers(app)
 
 if app.config["BYPASS_LOGIN_REQUIRED"]:
+    print("SECURITY WARNING: BYPASS_LOGIN_REQUIRED Enabled!")
     app.before_request(LoginResource().auto_login)
 
 login_manager = LoginManager()
@@ -56,6 +59,10 @@ api.add_resource(BookingsResource, "/api/booking")
 api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
 api.add_resource(CustomersResource, "/api/customers")
 api.add_resource(EventsResource, "/api/events")
+api.add_resource(AddressesResource, "/api/addresses")
+
+twilio_worker = TwilioWorker(get_config("twilio"))
+twilio_worker.run()
 
 
 def main():

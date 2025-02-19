@@ -117,9 +117,6 @@ class BookingsResource(Resource):
                 square_feet=square_feet,
                 has_own_equipment=has_own_equipment,
             )
-            if customer_scheme:
-                print(customer_scheme)
-            print(booking_scheme)
 
         except ValidationError as error:
             return Response(
