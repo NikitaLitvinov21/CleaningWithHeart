@@ -2,7 +2,7 @@ from flask import Response, json
 from flask_login import login_required
 from flask_restful import Resource
 
-from common.exceptions.entity_not_found_exception import EntityNotFoundException
+from common.exceptions.entity_not_found_exception import EntityNotFoundError
 from models.customer import Customer
 from schemes.customer_scheme import CustomerScheme, validate_by_customer_scheme
 from services.customer_service import CustomerService
@@ -23,7 +23,7 @@ class CustomerResource(Resource):
                 content_type="application/json",
                 response=json.dumps(customer.to_dict()),
             )
-        except EntityNotFoundException as e:
+        except EntityNotFoundError as e:
             return Response(
                 status=404,
                 content_type="application/json",
@@ -48,7 +48,7 @@ class CustomerResource(Resource):
                 content_type="application/json",
                 response=json.dumps({"message": "Customer updated successfully!"}),
             )
-        except EntityNotFoundException as e:
+        except EntityNotFoundError as e:
             return Response(
                 status=404,
                 content_type="application/json",
@@ -64,7 +64,7 @@ class CustomerResource(Resource):
                 content_type="application/json",
                 response=json.dumps({"message": "Customer deleted successfully!"}),
             )
-        except EntityNotFoundException as e:
+        except EntityNotFoundError as e:
             return Response(
                 status=404,
                 content_type="application/json",

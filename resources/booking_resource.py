@@ -6,7 +6,7 @@ from flask_login import login_required
 from flask_restful import Resource
 from pydantic import ValidationError
 
-from common.exceptions.entity_not_found_exception import EntityNotFoundException
+from common.exceptions.entity_not_found_exception import EntityNotFoundError
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
 from models.booking import Booking
@@ -30,7 +30,7 @@ class BookingResource(Resource):
                 content_type="application/json",
                 response=json.dumps(booking.to_dict()),
             )
-        except EntityNotFoundException as e:
+        except EntityNotFoundError as e:
             return Response(
                 status=404,
                 content_type="application/json",
@@ -129,7 +129,7 @@ class BookingResource(Resource):
                 content_type="application/json",
                 response=json.dumps({"message": "Booking updated successfully!"}),
             )
-        except EntityNotFoundException as e:
+        except EntityNotFoundError as e:
             return Response(
                 status=404,
                 content_type="application/json",
@@ -160,7 +160,7 @@ class BookingResource(Resource):
                 content_type="application/json",
                 response=json.dumps({"message": "Booking updated successfully!"}),
             )
-        except EntityNotFoundException as e:
+        except EntityNotFoundError as e:
             return Response(
                 status=404,
                 content_type="application/json",
@@ -176,7 +176,7 @@ class BookingResource(Resource):
                 content_type="application/json",
                 response=json.dumps({"message": "Booking deleted successfully!"}),
             )
-        except EntityNotFoundException as e:
+        except EntityNotFoundError as e:
             return Response(
                 status=404,
                 content_type="application/json",

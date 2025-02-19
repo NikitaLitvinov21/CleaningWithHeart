@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from common.exceptions.entity_not_found_exception import EntityNotFoundException
+from common.exceptions.entity_not_found_exception import EntityNotFoundError
 from common.utils.transaction import transaction
 from database.connector import get_session
 from models.customer import Customer
@@ -59,7 +59,7 @@ class CustomerService:
             if customer:
                 return customer
             else:
-                raise EntityNotFoundException("Customer not found!")
+                raise EntityNotFoundError("Customer not found!")
         finally:
             if is_session_created_here:
                 session.close()

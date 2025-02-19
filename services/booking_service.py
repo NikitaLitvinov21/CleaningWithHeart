@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session, joinedload
 
-from common.exceptions.entity_not_found_exception import EntityNotFoundException
+from common.exceptions.entity_not_found_exception import EntityNotFoundError
 from common.utils.transaction import transaction
 from database.connector import get_session
 from enums.building_type import BuildingType
@@ -77,7 +77,7 @@ class BookingService:
             if booking:
                 return booking
             else:
-                raise EntityNotFoundException("Booking not found!")
+                raise EntityNotFoundError("Booking not found!")
         finally:
             if is_session_created_here:
                 session.close()
