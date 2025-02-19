@@ -4,20 +4,23 @@ from typing import Union
 from flask import Response, json, request
 from flask_login import login_required
 from flask_restful import Resource
-from pydantic import ValidationError
+from pydantic import EmailStr, ValidationError
 
 from common.exceptions.entity_not_found_exception import EntityNotFoundError
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
 from models.booking import Booking
 from schemes.booking_scheme import BookingScheme
+from schemes.customer_scheme import CustomerScheme
 from services.booking_service import BookingService
+from services.customer_service import CustomerService
 
 
 class BookingResource(Resource):
 
     def __init__(self):
         self.booking_service = BookingService()
+        self.customer_service = CustomerService()
 
     @login_required
     def get(self, booking_id: int):
@@ -42,7 +45,13 @@ class BookingResource(Resource):
 
         try:
             data: dict = request.json
-            customer_id = int(data["customerId"])
+            customer_id: int = int(data["customerId"])
+            first_name: str = data.get("firstName")
+            last_name: str = data.get("lastName", "")
+            phone_number: str = data.get("phoneNumber")
+            email: Union[EmailStr, str] = data.get("email")
+            street: str = data.get("street")
+
             start_datetime = datetime.fromisoformat(
                 data.get("startDatetime"),
             )
@@ -68,6 +77,14 @@ class BookingResource(Resource):
             rooms_number = abs(int(data.get("roomsNumber")))
             square_feet = abs(int(data.get("squareFeet")))
             has_own_equipment = bool(data.get("hasOwnEquipment"))
+
+            customer_scheme = CustomerScheme(
+                first_name=first_name,
+                last_name=last_name,
+                phone_number=phone_number,
+                email=email,
+                street=street,
+            )
 
             booking_scheme = BookingScheme(
                 start_datetime=start_datetime,
@@ -106,6 +123,15 @@ class BookingResource(Resource):
             )
 
         try:
+            self.customer_service.update_customer(
+                customer_id=customer_id,
+                first_name=customer_scheme.first_name,
+                last_name=customer_scheme.last_name,
+                phone_number=customer_scheme.phone_number,
+                email=customer_scheme.email,
+                street=customer_scheme.street,
+            )
+
             self.booking_service.update_booking(
                 booking_id=booking_id,
                 customer_id=customer_id,

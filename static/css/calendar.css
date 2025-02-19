@@ -9,7 +9,7 @@ body {
     padding: 0;
     font-family: "Rubik", sans-serif;
     font-size: 16px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 h3 {
@@ -44,6 +44,7 @@ input:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0px 40rem #ffff inset;
 }
 
+/* Calendar page */
 .calendar {
     max-width: 1200px;
     margin: 40px auto;
@@ -54,7 +55,7 @@ input:-webkit-autofill:focus {
 .fc-timegrid-slot-label-frame,
 .fc-timegrid-axis-cushion,
 .fc-toolbar-title {
-        color: #2c3e50;
+    color: #2c3e50;
 }
 
 .fc-daygrid-day:hover,
@@ -63,9 +64,13 @@ input:-webkit-autofill:focus {
     cursor: pointer;
 }
 
-.icon{
+.icon {
     cursor: pointer;
     margin-left: 10px;
+}
+
+.close-icon-popover {
+    filter: invert(1);
 }
 
 .modal-open,
@@ -73,9 +78,13 @@ input:-webkit-autofill:focus {
     padding: 0 !important;
 }
 
+.modal-dialog-centered {
+    justify-content: center;
+}
+
 .modal-content {
     border-radius: 15px !important;
-    width: 500px;
+    max-width: 500px;
 }
 
 .modal-window,
@@ -108,6 +117,7 @@ input:-webkit-autofill:focus {
 .booking-form {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .add-place-horizontal {
@@ -120,6 +130,13 @@ input:-webkit-autofill:focus {
 
 .customer-formgroup {
     width: 220px;
+}
+
+.form-select,
+.add-place {
+    font-weight: 500;
+    color: #434343;
+    line-height: 20px;
 }
 
 .form-select:focus {
@@ -156,6 +173,10 @@ input:-webkit-autofill:focus {
     padding: 0 10px;
 }
 
+.add-place-customer-input::placeholder {
+    color: #9a9a9a;
+}
+
 .add-place {
     display: flex;
     align-items: center;
@@ -180,7 +201,7 @@ input.add-place-checkbox {
     border-style: solid;
     border-color: #f5f6f7;
     border-width: 0px 0px 2px 0px;
-    padding: 0px 30px 0px 175px;
+    padding: 0px 30px 0px 34%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -309,3 +330,9 @@ input.add-place-checkbox {
 .modal-buttons-footer.delete {
     margin-top: 0;
 }
+
+.add-place-customer-input:user-invalid {
+    border-color: #ff5151;
+}
+
+/* End calendar page */

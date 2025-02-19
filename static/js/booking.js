@@ -62,20 +62,50 @@ function saveBooking(event) {
         return;
     }
 
-    const formData = new FormData(form);
+    const firstName = document.querySelector("input[name='first_name']").value;
+    const lastName = document.querySelector("input[name='last_name']").value;
+    const phoneNumber = document.querySelector("input[name='phone_number']").value;
+    const email = document.querySelector("input[name='email']").value;
+    const street = document.querySelector("input[name='street']").value;
+    const startDatetime = document.querySelector("input[name='start_datetime']").value;
+    const selectedService = document.querySelector("select[name='selected_service']").value;
+    const building = document.querySelector("select[name='building']").value;
+    const roomsNumber = document.querySelector("input[name='rooms_number']").value;
+    const squareFeet = document.querySelector("input[name='square_feet']").value;
+    const hasOwnEquipment = document.querySelector("select[name='use_equipment']").value;
+    const hasCleanWindows = document.querySelector("input[name='clean_windows']").checked;
+    const hasCleanOven = document.querySelector("input[name='clean_oven']").checked;
+    const hasCleanBasement = document.querySelector("input[name='clean_basement']").checked;
+    const hasMoveInCleaning = document.querySelector("input[name='move_in_cleaning']").checked;
+    const hasMoveOutCleaning = document.querySelector("input[name='move_out_cleaning']").checked;
+    const hasCleanFridge = document.querySelector("input[name='clean_fridge']").checked;
 
-    const body = {};
-
-    for (const [key, value] of formData.entries()) {
-        body[key] = value;
-    }
+    const saveBooking = {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        email: email,
+        street: street,
+        startDatetime: startDatetime,
+        selectedService: selectedService,
+        building: building,
+        roomsNumber: roomsNumber,
+        squareFeet: squareFeet,
+        hasOwnEquipment: hasOwnEquipment,
+        hasCleanWindows: hasCleanWindows,
+        hasCleanOven: hasCleanOven,
+        hasCleanBasement: hasCleanBasement,
+        hasMoveInCleaning: hasMoveInCleaning,
+        hasMoveOutCleaning: hasMoveOutCleaning,
+        hasCleanFridge: hasCleanFridge,
+    };
 
     fetch("/api/booking", {
         method: "POST",
         headers: {
             "Content-Type": "application/json;charset=utf-8",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(saveBooking),
     })
         .then(async (response) => {
             if (response.ok) {

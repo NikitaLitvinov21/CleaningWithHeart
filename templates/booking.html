@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Booking</title>
+    <title> Booking page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -75,7 +75,7 @@
                                 <label class="customer-label">Email*</label>
                                 <div class="add-place">
                                     <img src="{{ url_for('static', filename='images/svg/email_customer.svg') }}"
-                                        alt="phone_customer" class="phone_customer">
+                                        alt="email_customer" class="email_customer">
                                     <input type="email" name="email" class="add-place-customer-input" maxlength="30"
                                         required value="" placeholder="customer@mail.com">
                                 </div>
@@ -106,7 +106,7 @@
                         <h3>SERVICES WE PROVIDE</h3>
                         <div class="add-place-horizontal select">
                             <select class="form-select" name="selected_service" required>
-                                <option selected disabled value="">Choose your service</option>
+                                <option selected disabled value="">Choose your service*</option>
                                 <option value="STANDART_CLEANING">Standard cleaning</option>
                                 <option value="DEEP_CLEANING">Deep cleaning</option>
                                 <option value="CLEANING_MOVE">Cleaning Move in/out</option>
@@ -148,21 +148,21 @@
                         <h3>MORE INFORMATION</h3>
                         <div class="add-place-horizontal select">
                             <select class="form-select" name="building" required>
-                                <option selected disabled value="">Cleaning your house or apartment?</option>
+                                <option selected disabled value="">Cleaning your house or apartment?*</option>
                                 <option value="HOUSE">House</option>
                                 <option value="APARTMENT">Apartment</option>
                             </select>
                         </div>
                         <div class="add-place-horizontal">
                             <div class="customer-formgroup">
-                                <label class="customer-label">Number of rooms</label>
+                                <label class="customer-label">Number of rooms*</label>
                                 <div class="add-place">
                                     <input type="number" name="rooms_number" class="add-place-customer-input" min="0"
                                         placeholder="0" value="" required>
                                 </div>
                             </div>
                             <div class="customer-formgroup">
-                                <label class="customer-label">Number of square feet</label>
+                                <label class="customer-label">Number of square feet*</label>
                                 <div class="add-place">
                                     <input type="number" name="square_feet" class="add-place-customer-input" min="0"
                                         placeholder="0" value="" required>
@@ -171,7 +171,7 @@
                         </div>
                         <div class="add-place-horizontal select">
                             <select class="form-select" name="use_equipment" required>
-                                <option selected disabled value="">May we use your vacuum/mop?</option>
+                                <option selected disabled value="">May we use your vacuum/mop?*</option>
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
