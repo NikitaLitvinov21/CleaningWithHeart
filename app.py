@@ -8,11 +8,11 @@ from flask_restful import Api
 from common.exceptions.error_handling import enable_errorhandlers
 from config import get_config
 from database.connector import create_tables
+from resources.addresses_resource import AddressesResource
 from resources.booking_resource import BookingResource
 from resources.bookings_resource import BookingsResource
 from resources.customer_resource import CustomerResource
 from resources.customers_resource import CustomersResource
-from resources.addresses_resource import AddressesResource
 from resources.events_resource import EventsResource
 from resources.login_resource import LoginResource
 from views.booking_view import BookingView
@@ -29,6 +29,7 @@ app.config.update(get_config("flask"))
 enable_errorhandlers(app)
 
 if app.config["BYPASS_LOGIN_REQUIRED"]:
+    print("SECURITY WARNING: BYPASS_LOGIN_REQUIRED Enabled!")
     app.before_request(LoginResource().auto_login)
 
 login_manager = LoginManager()
