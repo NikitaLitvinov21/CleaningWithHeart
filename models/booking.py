@@ -12,9 +12,8 @@ from models.base import Base
 class Booking(Base):
     __tablename__ = "bookings"
 
-    customer_id = mapped_column(
-        BigInteger, ForeignKey("customers.id")
-    )
+    customer_id = mapped_column(BigInteger, ForeignKey("customers.id"))
+    has_customer_been_notified: Mapped[bool] = mapped_column(default=False)
     cleaning_master_name: Mapped[str] = mapped_column(
         String(length=64),
         nullable=True,
@@ -23,6 +22,9 @@ class Booking(Base):
         DateTime(timezone=True), nullable=False
     )
     finish_datetime: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
+    notify_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False
     )
     selected_service: Mapped[SelectedService]

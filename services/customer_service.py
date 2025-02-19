@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from common.exceptions.entity_not_found_exception import EntityNotFoundException
+from common.exceptions.entity_not_found_exception import EntityNotFoundError
 from common.utils.transaction import transaction
 from database.connector import get_session
 from models.customer import Customer
@@ -16,12 +16,21 @@ class CustomerService:
         limit: int,
         page: int,
         session: Session,
+        only_names: bool = False,
     ) -> List[Customer]:
         offset_value = (page - 1) * limit
 
+        if only_names:
+            query = session.query(
+                Customer.id,
+                Customer.first_name,
+                Customer.last_name,
+            )
+        else:
+            query = session.query(Customer)
+
         customers: List[Customer] = (
-            session.query(Customer)
-            .limit(
+            query.limit(
                 limit=limit,
             )
             .offset(offset_value)
@@ -50,10 +59,22 @@ class CustomerService:
             if customer:
                 return customer
             else:
-                raise EntityNotFoundException("Customer not found!")
+                raise EntityNotFoundError("Customer not found!")
         finally:
             if is_session_created_here:
                 session.close()
+
+    @transaction
+    def is_customer_exists(
+        self,
+        phone_number: str,
+        session: Session,
+    ) -> bool:
+        return bool(
+            session.query(Customer.id)
+            .filter(Customer.phone_number == phone_number)
+            .first()
+        )
 
     @transaction
     def retrieve_customer_count(

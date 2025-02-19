@@ -677,7 +677,7 @@ footer {
     align-items: start;
 }
 
-.contact.footer > p {
+.contact.footer>p {
     font-weight: bold;
     color: #434343;
 }
@@ -704,6 +704,28 @@ footer {
 
 .add-place-customer-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     filter: invert(60%);
+}
+
+.addresses-suggestions {
+    position: relative;
+}
+
+.address-suggestion {
+    width: 500px;
+    height: 50px;
+    position: absolute;
+    background-color: white;
+    border-style: solid;
+    border-color: #dedede;
+    border-width: 2px;
+    text-align: center;
+    font-size: 25px;
+    line-height: 50px;
+    cursor: pointer;
+}
+
+.address-suggestion:hover {
+    background-color: #ececec;
 }
 
 input[type="number" i] {
@@ -736,7 +758,7 @@ input[type="number" i] {
     font-size: 1.5rem;
 }
 
-a > .save-button-text {
+a>.save-button-text {
     line-height: 33px;
 }
 

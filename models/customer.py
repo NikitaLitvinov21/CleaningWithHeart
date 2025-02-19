@@ -18,7 +18,7 @@ class Customer(Base):
         nullable=True,
     )
     phone_number: Mapped[str] = mapped_column(
-        String(11),
+        String(12),
         unique=True,
         nullable=False,
     )
@@ -31,6 +31,10 @@ class Customer(Base):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
+
+    @property
+    def international_phone_number(self):
+        return f"+{self.phone_number}"
 
     def to_dict(self):
         return {
