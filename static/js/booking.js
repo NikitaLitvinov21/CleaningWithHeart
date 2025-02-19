@@ -31,13 +31,13 @@ function saveBooking(event) {
     const building = document.querySelector("select[name='building']").value;
     const roomsNumber = document.querySelector("input[name='rooms_number']").value;
     const squareFeet = document.querySelector("input[name='square_feet']").value;
-    const useEquipment = document.querySelector("select[name='use_equipment']").value;
-    const cleanWindows = document.querySelector("input[name='clean_windows']").checked;
-    const cleanOven = document.querySelector("input[name='clean_oven']").checked;
-    const cleanBasement = document.querySelector("input[name='clean_basement']").checked;
-    const moveInCleaning = document.querySelector("input[name='move_in_cleaning']").checked;
-    const moveOutCleaning = document.querySelector("input[name='move_out_cleaning']").checked;
-    const cleanFridge = document.querySelector("input[name='clean_fridge']").checked;
+    const hasOwnEquipment = document.querySelector("select[name='use_equipment']").value;
+    const hasCleanWindows = document.querySelector("input[name='clean_windows']").checked;
+    const hasCleanOven = document.querySelector("input[name='clean_oven']").checked;
+    const hasCleanBasement = document.querySelector("input[name='clean_basement']").checked;
+    const hasMoveInCleaning = document.querySelector("input[name='move_in_cleaning']").checked;
+    const hasMoveOutCleaning = document.querySelector("input[name='move_out_cleaning']").checked;
+    const hasCleanFridge = document.querySelector("input[name='clean_fridge']").checked;
 
     const saveBooking = {
         firstName: firstName,
@@ -50,13 +50,13 @@ function saveBooking(event) {
         building: building,
         roomsNumber: roomsNumber,
         squareFeet: squareFeet,
-        useEquipment: useEquipment,
-        cleanWindows: cleanWindows,
-        cleanOven: cleanOven,
-        cleanBasement: cleanBasement,
-        moveInCleaning: moveInCleaning,
-        moveOutCleaning: moveOutCleaning,
-        cleanFridge: cleanFridge,
+        hasOwnEquipment: hasOwnEquipment,
+        hasCleanWindows: hasCleanWindows,
+        hasCleanOven: hasCleanOven,
+        hasCleanBasement: hasCleanBasement,
+        hasMoveInCleaning: hasMoveInCleaning,
+        hasMoveOutCleaning: hasMoveOutCleaning,
+        hasCleanFridge: hasCleanFridge,
     };
 
     fetch("/api/booking", {

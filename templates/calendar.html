@@ -29,6 +29,7 @@
                     <div class="modal-body" id="modalBody">
                         <div class="content-booking">
                             <form method="POST" id="bookingForm" class="booking-form">
+                                <input type="hidden" id="customerId">
                                 <h3>MAIN INFORMATION</h3>
                                 <div class="add-place-horizontal">
                                     <div class="customer-formgroup">
@@ -64,8 +65,20 @@
                                             placeholder="Street" required value="">
                                     </div>
                                     <div class="customer-formgroup">
-                                        <label class="customer-label">Date and Time*</label>
+                                        <label class="customer-label">Start date and time*</label>
                                         <input type="datetime-local" name="start_datetime"
+                                            class="add-place-customer-input" required value="">
+                                    </div>
+                                </div>
+                                <div class="add-place-horizontal">
+                                    <div class="customer-formgroup">
+                                        <label class="customer-label">Master</label>
+                                        <input type="text" name="master" class="add-place-customer-input" maxlength="50"
+                                            placeholder="Master" required value="">
+                                    </div>
+                                    <div class="customer-formgroup">
+                                        <label class="customer-label">End date and time*</label>
+                                        <input type="datetime-local" name="end_datetime"
                                             class="add-place-customer-input" required value="">
                                     </div>
                                 </div>
@@ -146,8 +159,7 @@
                                         onclick="saveBooking()">
                                         <div class="save-button-text">SAVE BOOKING</div>
                                     </button>
-                                    <button type="button" id="editButton" class="save-button modal-footer-button d-none"
-                                        onclick="updateBooking()">
+                                    <button type="button" id="editButton" class="save-button modal-footer-button d-none">
                                         <div class="save-button-text">EDIT BOOKING</div>
                                     </button>
                                     <button type="reset" class="cancel-button modal-footer-button">
