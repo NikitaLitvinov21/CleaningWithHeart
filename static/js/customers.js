@@ -99,6 +99,10 @@ function updatePagination(totalPages) {
     });
 }
 
+function formatPhoneNumber(phoneNumber) {
+    return phoneNumber.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "+$1 ($2) $3-$4");
+}
+
 function updateCustomersTable(customers) {
     const tbody = document.querySelector(".customers-table tbody");
     tbody.innerHTML = "";
@@ -108,7 +112,7 @@ function updateCustomersTable(customers) {
         row.innerHTML = `
             <td class="expand-column text-center">${customer.firstName}</td>
             <td class="expand-column text-center">${customer.lastName}</td>
-            <td class="expand-column text-center">${customer.phoneNumber}</td>
+            <td class="expand-column text-center">${formatPhoneNumber(customer.phoneNumber)}</td>
             <td class="expand-column text-center">${customer.email}</td>
             <td class="expand-column text-center">${customer.street}</td>
             <td class="expand-column text-center">${customer.specialNotes || "-"}</td>
@@ -139,21 +143,29 @@ function updateCustomersTable(customers) {
     });
 }
 
+const phoneInput = document.getElementById("phone_number")
+const mask = new IMask(phoneInput, {
+    mask: "+{1}(000)000-0000"
+})
+
+
 function openEditModal(customerId) {
     fetch(`/api/customers/${customerId}`)
         .then(response => response.json())
         .then(customer => {
             document.querySelector("input[name='first_name']").value = customer.firstName;
             document.querySelector("input[name='last_name']").value = customer.lastName;
-            document.querySelector("input[name='phone_number']").value = customer.phoneNumber;
+            mask.value = customer.phoneNumber;
             document.querySelector("input[name='email']").value = customer.email;
             document.querySelector("input[name='street']").value = customer.street;
             document.querySelector("input[name='notes']").value = customer.specialNotes || "";
             document.querySelector("#edit-button").setAttribute("data-customer-id", customerId);
+
             new bootstrap.Modal(document.getElementById("customerModal")).show();
         })
         .catch(error => console.error("Error loading customer data:", error));
 }
+
 
 function openDeleteModal(customerId) {
     document.querySelector("#delete-button").setAttribute("data-customer-id", customerId);
@@ -180,7 +192,7 @@ function editCustomer(customerId) {
 
     const firstName = document.querySelector("input[name='first_name']").value;
     const lastName = document.querySelector("input[name='last_name']").value;
-    const phoneNumber = document.querySelector("input[name='phone_number']").value;
+    const phoneNumber = mask.masked.unmaskedValue;
     const email = document.querySelector("input[name='email']").value;
     const street = document.querySelector("input[name='street']").value;
     const specialNotes = document.querySelector("input[name='notes']").value;

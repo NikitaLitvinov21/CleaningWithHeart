@@ -1,6 +1,7 @@
 const form = document.getElementById("bookingForm");
 const addressInput = form.querySelector("#addressInput");
 const addressesSuggestions = form.querySelector("#addressesSuggestions");
+const phoneInput = document.getElementById("phone_number")
 const urlBase = location.protocol + "//" + location.host;
 form.addEventListener("submit", saveBooking);
 
@@ -15,6 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const dateTimeInput = form.querySelector('input[name="start_datetime"]');
     dateTimeInput.min = currentDateTime;
 });
+
+const mask = new IMask(phoneInput,{
+    mask:"+{1}(000)000-0000"
+})
 
 addressInput.addEventListener("input", () => {
     const value = addressInput.value;
@@ -64,7 +69,7 @@ function saveBooking(event) {
 
     const firstName = document.querySelector("input[name='first_name']").value;
     const lastName = document.querySelector("input[name='last_name']").value;
-    const phoneNumber = document.querySelector("input[name='phone_number']").value;
+    const phoneNumber = mask.masked.unmaskedValue;
     const email = document.querySelector("input[name='email']").value;
     const street = document.querySelector("input[name='street']").value;
     const startDatetime = document.querySelector("input[name='start_datetime']").value;

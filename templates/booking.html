@@ -68,7 +68,8 @@
                                     <img src="{{ url_for('static', filename='images/svg/phone_customer.svg') }}"
                                         alt="phone_customer" class="phone_customer">
                                     <input type="tel" name="phone_number" class="add-place-customer-input"
-                                        maxlength="11" required pattern="^1\d{10}$" placeholder="10123456789" value="">
+                                        id="phone_number" maxlength="15" required placeholder="+1(___)___-____"
+                                        value="" pattern="^\+\d{1}\(\d{3}\)\d{3}-\d{4}$">
                                 </div>
                             </div>
                             <div class="customer-formgroup">
@@ -87,9 +88,8 @@
                                 <div class="add-place">
                                     <img src="{{ url_for('static', filename='images/svg/street_customer.svg') }}"
                                         alt="street_customer" class="street_customer">
-                                    <input type="text" name="street" id="addressInput"
-                                    class="add-place-customer-input" maxlength="50"
-                                        placeholder="Street" required value="">
+                                    <input type="text" name="street" id="addressInput" class="add-place-customer-input"
+                                        maxlength="254" placeholder="Street" required value="">
                                 </div>
                                 <div class="addresses-suggestions" id="addressesSuggestions"></div>
                             </div>
@@ -98,7 +98,8 @@
                                 <div class="add-place">
                                     <img src="{{ url_for('static', filename='images/svg/date_customer.svg') }}"
                                         alt="date_customer" class="date_customer">
-                                    <input type="datetime-local" name="start_datetime" class="add-place-customer-input" required value="">
+                                    <input type="datetime-local" name="start_datetime" class="add-place-customer-input"
+                                        required value="">
                                 </div>
                             </div>
                         </div>
@@ -214,6 +215,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/imask"></script>
     <script src="{{ url_for('static', filename='js/booking.js') }}"></script>
 </body>
 

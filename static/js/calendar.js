@@ -43,6 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calendar.render();
 
+    function formatPhoneNumber(phoneNumber) {
+        return phoneNumber.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "+$1 ($2) $3-$4");
+    }
+
     function showPopover(element, event, bookingData) {
         if (currentPopover) {
             currentPopover.dispose();
@@ -62,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div>
             <p><strong>Master:</strong> ${bookingData.cleaningMasterName || "-"}</p>
             <p><strong>Address:</strong> ${bookingData.customer.street || "-"}</p>
-            <p><strong>Phone number:</strong> ${bookingData.customer.phoneNumber || "-"}</p>
+            <p><strong>Phone number:</strong> ${formatPhoneNumber(bookingData.customer.phoneNumber) || "-"}</p>
             <p><strong>Email:</strong> ${bookingData.customer.email || "-"}</p>
             <p><strong>Start:</strong> ${event.start.toLocaleString()}</p>
             <p><strong>End:</strong> ${event.end.toLocaleString()}</p>
@@ -113,6 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const phoneInput = document.getElementById("phone_number")
+    const mask = new IMask(phoneInput, {
+        mask: "+{1}(000)000-0000"
+    })
+
     function openSaveModal(info) {
         closePopover();
 
@@ -145,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(booking)
                 document.querySelector("input[name='first_name']").value = booking.customer.firstName;
                 document.querySelector("input[name='last_name']").value = booking.customer.lastName;
-                document.querySelector("input[name='phone_number']").value = booking.customer.phoneNumber;
+                mask.value = booking.customer.phoneNumber;
                 document.querySelector("input[name='email']").value = booking.customer.email;
                 document.querySelector("input[name='street']").value = booking.customer.street;
                 document.querySelector("input[name='start_datetime']").value = booking.startDatetime;
@@ -178,6 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const form = document.getElementById("bookingForm");
+const phoneInput = document.getElementById("phone_number")
+const mask = new IMask(phoneInput, {
+    mask: "+{1}(000)000-0000"
+})
 
 function saveBooking(event) {
 
@@ -188,7 +201,7 @@ function saveBooking(event) {
 
     const firstName = document.querySelector("input[name='first_name']").value;
     const lastName = document.querySelector("input[name='last_name']").value;
-    const phoneNumber = document.querySelector("input[name='phone_number']").value;
+    const phoneNumber = mask.masked.unmaskedValue;
     const email = document.querySelector("input[name='email']").value;
     const street = document.querySelector("input[name='street']").value;
     const startDatetime = document.querySelector("input[name='start_datetime']").value;
@@ -317,7 +330,7 @@ function editBooking(bookingId) {
     const customerId = document.getElementById("customerId").value;
     const firstName = document.querySelector("input[name='first_name']").value;
     const lastName = document.querySelector("input[name='last_name']").value;
-    const phoneNumber = document.querySelector("input[name='phone_number']").value;
+    const phoneNumber = mask.masked.unmaskedValue;
     const email = document.querySelector("input[name='email']").value;
     const street = document.querySelector("input[name='street']").value;
     const startDatetime = document.querySelector("input[name='start_datetime']").value;

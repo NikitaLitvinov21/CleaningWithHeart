@@ -30,14 +30,14 @@ class AddressesService:
             properties = feature.get("properties", {})
             street_name = properties.get("name")
             city_name = properties.get("city")
-            postcode = properties.get("postcode", "")
+            # postcode = properties.get("postcode", "")
 
             if street_name:
                 full_address = f"{street_name}"
                 if city_name:
                     full_address += f", {city_name}"
-                if postcode:
-                    full_address += f" {postcode}"
+                # if postcode:
+                #     full_address += f" {postcode}"
 
                 if full_address not in addresses:
                     addresses.append(full_address)
