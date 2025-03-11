@@ -22,42 +22,51 @@ const mask = new IMask(phoneInput,{
 })
 
 addressInput.addEventListener("input", () => {
-    const value = addressInput.value;
+    const value = addressInput.value.trim();
 
     if (value) {
-        const params = new URLSearchParams({
-            search: value,
-        });
+        const params = new URLSearchParams({ search: value });
 
         fetch(`${urlBase}/api/addresses?${params}`)
             .then((response) => response.json())
             .then((json) => {
                 addressesSuggestions.innerHTML = ``;
-                let index = 0;
-                json.addresses.forEach((address) => {
-                    addressesSuggestions.insertAdjacentHTML(
-                        "beforeend", `
-                        <div class="address-suggestion" onclick="selectAddressesSuggestion(this.innerText)" style="top: ${index * 50}px">${address}</div>
-                    `
-                    );
-                    index++;
-                });
+
+                if (json.addresses.length > 0) {
+                    addressesSuggestions.style.display = "block"; // Показываем список
+
+                    json.addresses.forEach((address) => {
+                        const li = document.createElement("li");
+                        li.textContent = address;
+                        li.addEventListener("click", () => selectAddressesSuggestion(address));
+                        addressesSuggestions.appendChild(li);
+                    });
+                } else {
+                    addressesSuggestions.style.display = "none"; // Скрываем, если пусто
+                }
             });
     } else {
-        addressesSuggestions.innerHTML = ``;
+        addressesSuggestions.style.display = "none";
     }
 });
 
+// Закрываем список при потере фокуса
+document.addEventListener("click", (e) => {
+    if (!addressInput.contains(e.target) && !addressesSuggestions.contains(e.target)) {
+        addressesSuggestions.style.display = "none";
+    }
+});
+
+function selectAddressesSuggestion(suggestion) {
+    addressInput.value = suggestion;
+    addressesSuggestions.style.display = "none";
+}
+    
 addressInput.addEventListener("blur", () => {
     setTimeout(() => {
         addressesSuggestions.innerHTML = ``;
     }, 1000);
 })
-
-function selectAddressesSuggestion(suggestion) {
-    addressInput.value = suggestion;
-    addressesSuggestions.innerHTML = ``;
-}
 
 function saveBooking(event) {
     event.preventDefault();

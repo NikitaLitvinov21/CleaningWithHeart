@@ -15,6 +15,7 @@ body {
 h3,
 p {
     margin: 0;
+    line-height: normal;
 }
 
 a {
@@ -114,12 +115,13 @@ footer {
     border-top: 2px solid #F5F6F7;
     display: flex;
     align-items: center;
-    margin-left: 20px;
+    margin: 0 20px;
 }
 
 .copyright {
     color: #7D8FB3;
     font-weight: 500;
+    padding-bottom: 2px;
 }
 
 .calendar-content {
@@ -271,7 +273,7 @@ footer {
     display: flex;
     align-items: center;
     gap: 5px;
-    width: 210px;
+    width: 220px;
 }
 
 input.add-place-checkbox {
@@ -306,7 +308,7 @@ input.add-place-checkbox {
     text-align: left;
     font-family: "Rubik", sans-serif;
     font-size: 1.25rem;
-    line-height: 25px;
+    line-height: normal;
     font-weight: 500;
     position: relative;
 }
@@ -426,3 +428,54 @@ input.add-place-checkbox {
 }
 
 /* End calendar page */
+@media (max-width: 625px) {
+    .fc .fc-toolbar {
+        flex-direction: column;
+    }
+
+    .fc .fc-toolbar-title {
+        margin: 10px 0;
+    }
+}
+
+
+@media (max-width: 525px) {
+    .modal-content {
+        min-width: 360px;
+        width: 98%;
+    }
+
+    .modal-window-booking {
+        min-width: 360px;
+        width: 100%;
+    }
+
+    .content-booking {
+        width: 100%;
+    }
+
+    .booking-form {
+        width: 100%;
+    }
+
+    .add-place-horizontal {
+        margin: 3px 5px;
+        gap: 0;
+    }
+
+    .customer-formgroup {
+        width: min-content;
+    }
+
+    .add-place-customer-input {
+        width: 45vw;
+    }
+
+    .add-place {
+        width: 45vw;
+    }
+
+    .modal-buttons-footer {
+        width: auto;
+    }
+}

@@ -68,8 +68,8 @@
                                     <img src="{{ url_for('static', filename='images/svg/phone_customer.svg') }}"
                                         alt="phone_customer" class="phone_customer">
                                     <input type="tel" name="phone_number" class="add-place-customer-input"
-                                        id="phone_number" maxlength="15" required placeholder="+1(___)___-____"
-                                        value="" pattern="^\+\d{1}\(\d{3}\)\d{3}-\d{4}$">
+                                        id="phone_number" maxlength="15" required placeholder="+1(___)___-____" value=""
+                                        pattern="^\+\d{1}\(\d{3}\)\d{3}-\d{4}$">
                                 </div>
                             </div>
                             <div class="customer-formgroup">
@@ -89,9 +89,9 @@
                                     <img src="{{ url_for('static', filename='images/svg/street_customer.svg') }}"
                                         alt="street_customer" class="street_customer">
                                     <input type="text" name="street" id="addressInput" class="add-place-customer-input"
-                                        maxlength="254" placeholder="Street" required value="">
+                                        maxlength="254" placeholder="Street" required>
                                 </div>
-                                <div class="addresses-suggestions" id="addressesSuggestions"></div>
+                                <ul class="addresses-suggestions" id="addressesSuggestions"></ul>
                             </div>
                             <div class="customer-formgroup">
                                 <label class="customer-label">Date and Time*</label>
@@ -208,7 +208,10 @@
                     <p>647-262-8989</p>
                 </div>
             </div>
-            <p class="copyright">Copyright © 2024 CLEANING WITH HEART Cleaning Services – All Rights Reserved</p>
+            <p class="copyright">Copyright ©
+                <script>document.write(new Date().getFullYear())</script>
+                CLEANING WITH HEART Cleaning Services – All Rights Reserved
+            </p>
         </div>
     </footer>
 

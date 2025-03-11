@@ -133,7 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const startDatetimeInput = document.querySelector("input[name='start_datetime']");
         if (startDatetimeInput) {
-            startDatetimeInput.value = info.start.toISOString().slice(0, 16);
+            const localDatetime = new Date(info.start.getTime() - info.start.getTimezoneOffset() * 60000)
+                .toISOString()
+                .slice(0, 16);
+            startDatetimeInput.value = localDatetime;
         }
 
         new bootstrap.Modal(document.getElementById('bookingModal')).show();
