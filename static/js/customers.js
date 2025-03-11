@@ -148,7 +148,6 @@ const mask = new IMask(phoneInput, {
     mask: "+{1}(000)000-0000"
 })
 
-
 function openEditModal(customerId) {
     fetch(`/api/customers/${customerId}`)
         .then(response => response.json())

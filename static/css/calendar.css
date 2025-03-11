@@ -156,6 +156,22 @@ footer {
     cursor: pointer;
 }
 
+.popover-header span {
+    color: #2c3e50;
+    text-align: left;
+    font-family: "Rubik", sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+}
+
+.popover-body p {
+    color: #2c3e50;
+    text-align: left;
+    font-family: "Rubik", sans-serif;
+    line-height: 20px;
+    font-weight: 400;
+}
+
 .icon {
     cursor: pointer;
     margin-left: 10px;
