@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
 from common.exceptions.entity_not_found_exception import EntityNotFoundError
@@ -28,6 +29,8 @@ class CustomerService:
             )
         else:
             query = session.query(Customer)
+
+        query = query.order_by(desc(Customer.created_at))
 
         customers: List[Customer] = (
             query.limit(

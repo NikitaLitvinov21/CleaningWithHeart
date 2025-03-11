@@ -651,7 +651,6 @@ input:-webkit-autofill:focus {
 }
 
 footer {
-    height: 280px;
     background-color: #ececec;
 }
 
@@ -670,13 +669,11 @@ footer {
 .logo.footer {
     display: flex;
     align-items: center;
-    padding-top: 60px;
-    padding-left: 30px;
+    padding: 15px;
 }
 
 .contact.footer {
-    padding-top: 60px;
-    padding-right: 30px;
+    padding: 15px;
     font-size: 1.5rem;
     display: flex;
     align-items: start;
@@ -697,6 +694,7 @@ footer {
     color: #434343;
     font-weight: bold;
     margin: 10px;
+    line-height: normal;
 }
 
 .add-place:has(.add-place-customer-input:user-invalid) {
@@ -712,7 +710,26 @@ footer {
 }
 
 .addresses-suggestions {
-    position: relative;
+    position: absolute;
+    width: 500px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 250px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+}
+
+.addresses-suggestions li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.addresses-suggestions li:hover {
+    background: #f0f0f0;
 }
 
 .address-suggestion {
@@ -963,7 +980,8 @@ input.add-place-checkbox {
         width: 950px;
     }
 
-    .add-place {
+    .add-place,
+    .addresses-suggestions {
         width: 400px;
     }
 }
@@ -997,8 +1015,13 @@ input.add-place-checkbox {
         width: 80%;
     }
 
-    .customer-formgroup {
+    .customer-formgroup,
+    .addresses-suggestions {
         width: 100%;
+    }
+
+    .customer-formgroup {
+        position: relative;
     }
 
     .add-place-horizontal {
@@ -1012,6 +1035,34 @@ input.add-place-checkbox {
 
     .save-button {
         width: 100%;
+    }
+
+    .logo.footer img {
+        width: 50px;
+        height: 50px;
+        margin: 0;
+    }
+
+    .contact.footer {
+        height: auto;
+    }
+
+    .text-content.footer h1 {
+        font-size: 1.5em;
+        padding: 0;
+    }
+
+    .text-content.footer p {
+        font-size: 1em;
+    }
+
+    .contact.footer p {
+        font-size: 1rem;
+    }
+
+    .testimonials,
+    .additional-services-title.praise {
+        display: none;
     }
 }
 
@@ -1135,6 +1186,23 @@ input.add-place-checkbox {
     .booking-form {
         width: 90%;
     }
+
+    .footer-content {
+        flex-direction: column;
+    }
+
+    .logo.footer {
+        padding: 10px 0 5px;
+        justify-content: center;
+    }
+
+    .text-content.footer {
+        align-items: center;
+    }
+
+    .contact.footer {
+        display: none;
+    }
 }
 
 @media (max-width: 575px) {
@@ -1179,10 +1247,11 @@ input.add-place-checkbox {
     .service-images {
         transition-delay: 0s !important;
     }
+}
 
-    .testimonials,
-    .additional-services-title.praise {
-        display: none;
+@media (max-width: 406px) {
+    .logo.footer {
+        padding: 10px 10px 0;
     }
 }
 

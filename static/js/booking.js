@@ -1,6 +1,7 @@
 const form = document.getElementById("bookingForm");
 const addressInput = form.querySelector("#addressInput");
 const addressesSuggestions = form.querySelector("#addressesSuggestions");
+const phoneInput = document.getElementById("phone_number")
 const urlBase = location.protocol + "//" + location.host;
 form.addEventListener("submit", saveBooking);
 
@@ -16,43 +17,56 @@ document.addEventListener("DOMContentLoaded", () => {
     dateTimeInput.min = currentDateTime;
 });
 
+const mask = new IMask(phoneInput,{
+    mask:"+{1}(000)000-0000"
+})
+
 addressInput.addEventListener("input", () => {
-    const value = addressInput.value;
+    const value = addressInput.value.trim();
 
     if (value) {
-        const params = new URLSearchParams({
-            search: value,
-        });
+        const params = new URLSearchParams({ search: value });
 
         fetch(`${urlBase}/api/addresses?${params}`)
             .then((response) => response.json())
             .then((json) => {
                 addressesSuggestions.innerHTML = ``;
-                let index = 0;
-                json.addresses.forEach((address) => {
-                    addressesSuggestions.insertAdjacentHTML(
-                        "beforeend", `
-                        <div class="address-suggestion" onclick="selectAddressesSuggestion(this.innerText)" style="top: ${index * 50}px">${address}</div>
-                    `
-                    );
-                    index++;
-                });
+
+                if (json.addresses.length > 0) {
+                    addressesSuggestions.style.display = "block"; // Показываем список
+
+                    json.addresses.forEach((address) => {
+                        const li = document.createElement("li");
+                        li.textContent = address;
+                        li.addEventListener("click", () => selectAddressesSuggestion(address));
+                        addressesSuggestions.appendChild(li);
+                    });
+                } else {
+                    addressesSuggestions.style.display = "none"; // Скрываем, если пусто
+                }
             });
     } else {
-        addressesSuggestions.innerHTML = ``;
+        addressesSuggestions.style.display = "none";
     }
 });
 
+// Закрываем список при потере фокуса
+document.addEventListener("click", (e) => {
+    if (!addressInput.contains(e.target) && !addressesSuggestions.contains(e.target)) {
+        addressesSuggestions.style.display = "none";
+    }
+});
+
+function selectAddressesSuggestion(suggestion) {
+    addressInput.value = suggestion;
+    addressesSuggestions.style.display = "none";
+}
+    
 addressInput.addEventListener("blur", () => {
     setTimeout(() => {
         addressesSuggestions.innerHTML = ``;
     }, 1000);
 })
-
-function selectAddressesSuggestion(suggestion) {
-    addressInput.value = suggestion;
-    addressesSuggestions.innerHTML = ``;
-}
 
 function saveBooking(event) {
     event.preventDefault();
@@ -64,7 +78,7 @@ function saveBooking(event) {
 
     const firstName = document.querySelector("input[name='first_name']").value;
     const lastName = document.querySelector("input[name='last_name']").value;
-    const phoneNumber = document.querySelector("input[name='phone_number']").value;
+    const phoneNumber = mask.masked.unmaskedValue;
     const email = document.querySelector("input[name='email']").value;
     const street = document.querySelector("input[name='street']").value;
     const startDatetime = document.querySelector("input[name='start_datetime']").value;
