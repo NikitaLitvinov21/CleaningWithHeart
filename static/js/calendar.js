@@ -122,8 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
         mask: "+{1}(000)000-0000"
     })
 
+    const form = document.getElementById("bookingForm");
+
     function openSaveModal(info) {
         closePopover();
+        form.reset();
 
         document.getElementById('modalTitle').innerText = 'SAVE BOOKING';
         const saveButton = document.querySelector('#saveButton');
@@ -154,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(`/api/booking/${event.id}`)
             .then(response => response.json())
             .then(booking => {
-                console.log(booking)
                 document.querySelector("input[name='first_name']").value = booking.customer.firstName;
                 document.querySelector("input[name='last_name']").value = booking.customer.lastName;
                 mask.value = booking.customer.phoneNumber;
@@ -191,8 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector("#saveButton").addEventListener("click", function () {
         saveBooking();
     });
-
-    const form = document.getElementById("bookingForm");
 
     function saveBooking() {
 
@@ -260,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .then(responseData => {
-                console.log(responseData);
                 return responseData;
             })
             .catch(error => {
@@ -390,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .then(responseData => {
-                console.log(responseData);
                 return responseData;
             })
             .catch(error => {
