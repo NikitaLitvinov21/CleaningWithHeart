@@ -66,7 +66,7 @@ twilio_worker.run()
 
 
 def main():
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(**get_config("server"))
 
 
 if __name__ == "__main__":

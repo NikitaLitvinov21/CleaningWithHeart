@@ -5,6 +5,10 @@ flask:
     SESSION_COOKIE_SAMESITE: "Strict"
     BYPASS_LOGIN_REQUIRED: False
 
+server:
+    host: !ENV ${SERVER_HOST:127.0.0.1}
+    port: !ENV ${SERVER_PORT:5000}
+
 database:
     echo: False
     name: !ENV ${POSTGRES_DB:cleaning_with_heart}
