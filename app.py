@@ -52,7 +52,12 @@ app.add_url_rule(
         CalendarView.as_view("calendar"),
     ),
 )
-app.add_url_rule(rule="/customers", view_func=CustomersView.as_view("customers"))
+app.add_url_rule(
+    rule="/customers",
+    view_func=login_required(
+        CustomersView.as_view("customers"),
+    ),
+)
 
 api.add_resource(BookingResource, "/api/booking/<int:booking_id>")
 api.add_resource(BookingsResource, "/api/booking")
