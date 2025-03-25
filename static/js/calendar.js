@@ -292,8 +292,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function patchBooking(event) {
         const patchedData = {
-            start: event.start.toISOString(),
-            end: event.end.toISOString()
+            start: event.start,
+            end: event.end
         };
 
         fetch(`/api/booking/${event.id}`, {
