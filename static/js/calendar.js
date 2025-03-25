@@ -30,6 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => showPopover(info.el, info.event, data))
                 .catch(error => console.error("Error loading booking", error));
         },
+        eventDataTransform: function (event) {
+            event.start = new Date(event.start);
+            event.end = new Date(event.end);
+            return event;
+        },
         select: function (info) {
             openSaveModal(info);
         },
