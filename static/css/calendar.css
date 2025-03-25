@@ -245,6 +245,7 @@ footer {
     font-weight: 500;
     color: #434343;
     line-height: 20px;
+    height: 40px;
 }
 
 .form-select:focus {
@@ -277,7 +278,7 @@ footer {
     border-color: #dedede;
     border-width: 2px;
     border-radius: 5px;
-    height: 33.5px;
+    height: 40px;
     padding: 0 10px;
 }
 
@@ -493,5 +494,11 @@ input.add-place-checkbox {
 
     .modal-buttons-footer {
         width: auto;
+    }
+}
+
+@media (max-width: 385px) {
+    .customer-label {
+        font-size: 0.75rem;
     }
 }

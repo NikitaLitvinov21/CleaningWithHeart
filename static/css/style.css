@@ -114,12 +114,13 @@ input:-webkit-autofill:focus {
     height: 75px;
 }
 
-.contact span {
+.contact a {
     font-weight: bold;
     color: #434343;
     font-size: 1.5em;
     position: relative;
     top: 15px;
+    text-decoration: none;
 }
 
 .book-bottom {
@@ -684,6 +685,14 @@ footer {
     color: #434343;
 }
 
+.contact.footer>a {
+    font-weight: bold;
+    color: #434343;
+    text-decoration: none;
+    font-size: 1.5rem;
+    top: 0;
+}
+
 .text-content.footer {
     align-items: start;
     display: flex;
@@ -1060,6 +1069,10 @@ input.add-place-checkbox {
         font-size: 1rem;
     }
 
+    .contact.footer a {
+        font-size: 1rem;
+    }
+
     .testimonials,
     .additional-services-title.praise {
         display: none;
@@ -1097,9 +1110,10 @@ input.add-place-checkbox {
         font-weight: bold;
     }
 
-    .contact.booking span {
+    .contact.booking a {
         top: 0;
         font-size: 1.25rem;
+        text-decoration: none;
     }
 
     .about-text {
@@ -1200,8 +1214,15 @@ input.add-place-checkbox {
         align-items: center;
     }
 
+    .text-content.footer p  {
+        display: none;
+    }
+
     .contact.footer {
         display: none;
+    }
+    .copyright{
+        font-size: 0.7rem ;
     }
 }
 
