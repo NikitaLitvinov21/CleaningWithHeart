@@ -9,6 +9,8 @@ server:
     host: !ENV ${SERVER_HOST:127.0.0.1}
     port: !ENV ${SERVER_PORT:5000}
 
+timezone: !ENV ${TIMEZONE:Europe/Kyiv}
+
 database:
     echo: False
     name: !ENV ${POSTGRES_DB:cleaning_with_heart}

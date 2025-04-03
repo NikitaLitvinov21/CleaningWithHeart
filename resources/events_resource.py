@@ -5,6 +5,7 @@ from flask import Response, json, request
 from flask_login import login_required
 from flask_restful import Resource
 
+from common.utils.datetime_util import iso_string_to_datetime_utc
 from schemes.event_scheme import EventScheme
 from services.events_service import EventsService
 
@@ -18,8 +19,12 @@ class EventsResource(Resource):
     def get(self) -> Response:
 
         try:
-            start_datetime = datetime.fromisoformat(request.args["start"])
-            finish_datetime = datetime.fromisoformat(request.args["end"])
+            start_datetime: datetime = iso_string_to_datetime_utc(
+                request.args["start"]
+            )
+            finish_datetime: datetime = iso_string_to_datetime_utc(
+                request.args["end"]
+            )
         except ValueError:
             return Response(
                 status=400,

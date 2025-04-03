@@ -6,6 +6,7 @@ from flask_login import login_required
 from flask_restful import Resource
 from pydantic import EmailStr, ValidationError
 
+from common.utils.datetime_util import iso_string_to_datetime_utc
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
 from models.booking import Booking
@@ -64,13 +65,13 @@ class BookingsResource(Resource):
             phone_number: str = data.get("phoneNumber")
             email: Union[EmailStr, str] = data.get("email")
             street: str = data.get("street")
-            start_datetime = datetime.fromisoformat(
+            start_datetime: datetime = iso_string_to_datetime_utc(
                 data.get("startDatetime"),
             )
             cleaning_master_name: str = data.get("cleaningMasterName") or None
             default_cleaning_duration = timedelta(hours=2)
             finish_datetime: datetime = (
-                datetime.fromisoformat(data.get("finishDatetime"))
+                iso_string_to_datetime_utc(data.get("finishDatetime"))
                 if data.get("finishDatetime")
                 else start_datetime + default_cleaning_duration
             )

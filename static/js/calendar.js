@@ -30,11 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => showPopover(info.el, info.event, data))
                 .catch(error => console.error("Error loading booking", error));
         },
-        eventDataTransform: function (event) {
-            event.start = new Date(event.start);
-            event.end = new Date(event.end);
-            return event;
-        },
         select: function (info) {
             openSaveModal(info);
         },
@@ -79,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span>
                     <img src="/static/images/svg/edit-icon.svg" alt="edit-icon"
                         class="edit-icon icon-button">
-                    <img src="/static/images/svg/delete-icon.svg" alt="delete-icon" 
+                    <img src="/static/images/svg/delete-icon.svg" alt="delete-icon"
                         class="delete-icon icon-button">
                 </span>
             </div>
@@ -401,4 +396,3 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 });
-

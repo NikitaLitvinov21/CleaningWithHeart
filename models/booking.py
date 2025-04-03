@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import BigInteger, DateTime, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from common.utils.datetime_util import datetime_to_iso8601
+from common.utils.datetime_util import datetime_to_str, datetime_to_iso8601
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
 from models.base import Base
@@ -45,8 +45,8 @@ class Booking(Base):
         return {
             "id": self.id,
             "cleaningMasterName": self.cleaning_master_name,
-            "startDatetime": datetime_to_iso8601(self.start_datetime),
-            "finishDatetime": datetime_to_iso8601(self.finish_datetime),
+            "startDatetime": datetime_to_str(self.start_datetime),
+            "finishDatetime": datetime_to_str(self.finish_datetime),
             "selectedService": self.selected_service,
             "hasCleanOven": self.has_clean_oven,
             "hasCleanWindows": self.has_clean_windows,
