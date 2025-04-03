@@ -4,9 +4,9 @@ from zoneinfo import ZoneInfo
 
 import pytz
 
-# from config import get_config
+from config import get_config
 
-timezone_local = "America/Toronto"  # get_config("timezone")
+timezone_local = get_config("timezone")
 ISO8601_DATETIME_FORMAT: Final = "%Y-%m-%dT%H:%M:%S"
 
 
