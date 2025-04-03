@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from common.utils.datetime_util import datetime_to_iso8601
+from common.utils.datetime_util import datetime_to_str
 from schemes.scheme import Scheme
 
 
@@ -14,6 +14,6 @@ class EventScheme(Scheme):
         return {
             "id": self.id,
             "title": self.title,
-            "start": datetime_to_iso8601(self.start_datetime),
-            "end": datetime_to_iso8601(self.finish_datetime),
+            "start": datetime_to_str(self.start_datetime),
+            "end": datetime_to_str(self.finish_datetime),
         }

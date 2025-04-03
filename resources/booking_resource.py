@@ -6,6 +6,7 @@ from flask_login import login_required
 from flask_restful import Resource
 from pydantic import EmailStr, ValidationError
 
+from common.utils.datetime_util import iso_string_to_datetime_utc
 from common.exceptions.entity_not_found_exception import EntityNotFoundError
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
@@ -52,13 +53,13 @@ class BookingResource(Resource):
             email: Union[EmailStr, str] = data.get("email")
             street: str = data.get("street")
 
-            start_datetime = datetime.fromisoformat(
+            start_datetime: datetime = iso_string_to_datetime_utc(
                 data.get("startDatetime"),
             )
             cleaning_master_name: str = data.get("cleaningMasterName") or None
             default_cleaning_duration = timedelta(hours=2)
             finish_datetime: datetime = (
-                datetime.fromisoformat(data.get("finishDatetime"))
+                iso_string_to_datetime_utc(data.get("finishDatetime"))
                 if data.get("finishDatetime")
                 else start_datetime + default_cleaning_duration
             )
@@ -153,7 +154,9 @@ class BookingResource(Resource):
             return Response(
                 status=200,
                 content_type="application/json",
-                response=json.dumps({"message": "Booking updated successfully!"}),
+                response=json.dumps(
+                    {"message": "Booking updated successfully!"}
+                ),
             )
         except EntityNotFoundError as e:
             return Response(
@@ -166,8 +169,12 @@ class BookingResource(Resource):
     def patch(self, booking_id: int):
         data = request.json
         try:
-            start_datetime = datetime.fromisoformat(data.get("start"))
-            finish_datetime = datetime.fromisoformat(data.get("end"))
+            start_datetime: datetime = iso_string_to_datetime_utc(
+                data.get("start")
+            )
+            finish_datetime: datetime = iso_string_to_datetime_utc(
+                data.get("end")
+            )
         except (ValueError, TypeError) as error:
             return Response(
                 status=400,
@@ -184,7 +191,9 @@ class BookingResource(Resource):
             return Response(
                 status=200,
                 content_type="application/json",
-                response=json.dumps({"message": "Booking updated successfully!"}),
+                response=json.dumps(
+                    {"message": "Booking updated successfully!"}
+                ),
             )
         except EntityNotFoundError as e:
             return Response(
@@ -200,7 +209,9 @@ class BookingResource(Resource):
             return Response(
                 status=200,
                 content_type="application/json",
-                response=json.dumps({"message": "Booking deleted successfully!"}),
+                response=json.dumps(
+                    {"message": "Booking deleted successfully!"}
+                ),
             )
         except EntityNotFoundError as e:
             return Response(
