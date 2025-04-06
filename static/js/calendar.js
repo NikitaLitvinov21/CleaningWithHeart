@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPopover = null;
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
+        timeZone: 'America/Toronto',
         editable: true,
         selectable: true,
         navLinks: true,
@@ -68,8 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <p><strong>Address:</strong> ${bookingData.customer.street || "-"}</p>
             <p><strong>Phone number:</strong> ${formatPhoneNumber(bookingData.customer.phoneNumber) || "-"}</p>
             <p><strong>Email:</strong> ${bookingData.customer.email || "-"}</p>
-            <p><strong>Start:</strong> ${event.start.toLocaleString()}</p>
-            <p><strong>End:</strong> ${event.end.toLocaleString()}</p>
+            <p><strong>Start:</strong> ${event.start.toLocaleString('en-CA', { timeZone: 'UTC' })}</p>
+            <p><strong>End:</strong> ${event.end.toLocaleString('en-CA', { timeZone: 'UTC' })}</p>
             <div class="d-flex justify-content-end">
                 <span>
                     <img src="/static/images/svg/edit-icon.svg" alt="edit-icon"
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const startDatetimeInput = document.querySelector("input[name='start_datetime']");
         if (startDatetimeInput) {
-            const localDatetime = new Date(info.start.getTime() - info.start.getTimezoneOffset() * 60000)
+            const localDatetime = new Date(info.start.getTime())
                 .toISOString()
                 .slice(0, 16);
             startDatetimeInput.value = localDatetime;
@@ -195,53 +196,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function saveBooking() {
+        const saveButton = document.querySelector('#saveButton');
+        saveButton.disabled = true; 
+
+        const booking = getFormData();
+        const startDateTimeObj = new Date(booking.startDatetime);
+        const finishDateTimeObj = new Date(booking.finishDatetime);
+
+        const finishDatetimeInput = document.querySelector("input[name='end_datetime']");
+        finishDatetimeInput.addEventListener('input', function () {
+            const finishDatetime = finishDatetimeInput.value;
+            const finishDateTimeObj = new Date(finishDatetime);
+            validateFinishDatetime(startDateTimeObj, finishDateTimeObj, finishDatetimeInput);
+        });
+
+        validateFinishDatetime(startDateTimeObj, finishDateTimeObj, finishDatetimeInput);
 
         if (!form.checkValidity()) {
             form.reportValidity();
+            saveButton.disabled = false;
             return;
         }
-
-        const firstName = document.querySelector("input[name='first_name']").value;
-        const lastName = document.querySelector("input[name='last_name']").value;
-        const phoneNumber = mask.masked.unmaskedValue;
-        const email = document.querySelector("input[name='email']").value;
-        const street = document.querySelector("input[name='street']").value;
-        const startDatetime = document.querySelector("input[name='start_datetime']").value;
-        const cleaningMasterName = document.querySelector("input[name='master']").value;
-        const finishDatetime = document.querySelector("input[name='end_datetime']").value;
-        const selectedService = document.querySelector("select[name='selected_service']").value;
-        const building = document.querySelector("select[name='building']").value;
-        const roomsNumber = document.querySelector("input[name='rooms_number']").value;
-        const squareFeet = document.querySelector("input[name='square_feet']").value;
-        const hasOwnEquipment = document.querySelector("select[name='use_equipment']").value;
-        const hasCleanWindows = document.querySelector("input[name='clean_windows']").checked;
-        const hasCleanOven = document.querySelector("input[name='clean_oven']").checked;
-        const hasCleanBasement = document.querySelector("input[name='clean_basement']").checked;
-        const hasMoveInCleaning = document.querySelector("input[name='move_in_cleaning']").checked;
-        const hasMoveOutCleaning = document.querySelector("input[name='move_out_cleaning']").checked;
-        const hasCleanFridge = document.querySelector("input[name='clean_fridge']").checked;
-
-        const booking = {
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: phoneNumber,
-            email: email,
-            street: street,
-            startDatetime: startDatetime,
-            cleaningMasterName: cleaningMasterName,
-            finishDatetime: finishDatetime,
-            selectedService: selectedService,
-            building: building,
-            roomsNumber: roomsNumber,
-            squareFeet: squareFeet,
-            hasOwnEquipment: hasOwnEquipment,
-            hasCleanWindows: hasCleanWindows,
-            hasCleanOven: hasCleanOven,
-            hasCleanBasement: hasCleanBasement,
-            hasMoveInCleaning: hasMoveInCleaning,
-            hasMoveOutCleaning: hasMoveOutCleaning,
-            hasCleanFridge: hasCleanFridge,
-        };
 
         fetch("/api/booking", {
             method: "POST",
@@ -264,8 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error(JSON.parse(error.message));
+            })
+            .finally(() => {
+                saveButton.disabled = false;
             });
     }
+
 
     document.querySelector("#delete-button").addEventListener("click", function () {
         const bookingId = this.getAttribute("data-booking-id");
@@ -291,9 +270,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function patchBooking(event) {
+        const timeZone = 'UTC';
+
         const patchedData = {
-            start: event.start,
-            end: event.end
+            start: event.start.toLocaleString('sv-SE', { timeZone, hour12: false }).replace(' ', 'T'),
+            end: event.end.toLocaleString('sv-SE', { timeZone, hour12: false }).replace(' ', 'T')
         };
 
         fetch(`/api/booking/${event.id}`, {
@@ -322,55 +303,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function editBooking(bookingId) {
+        const editButton = document.querySelector('#editButton');
+        editButton.disabled = true;
+
+        const booking = getFormData();
+        booking.customerId = document.getElementById("customerId").value;
+
+        const startDateTimeObj = new Date(booking.startDatetime);
+        const finishDateTimeObj = new Date(booking.finishDatetime);
+
+        const finishDatetimeInput = document.querySelector("input[name='end_datetime']");
+        finishDatetimeInput.addEventListener('input', function () {
+            const finishDatetime = finishDatetimeInput.value;
+            const finishDateTimeObj = new Date(finishDatetime);
+            validateFinishDatetime(startDateTimeObj, finishDateTimeObj, finishDatetimeInput);
+        });
+
+        validateFinishDatetime(startDateTimeObj, finishDateTimeObj, finishDatetimeInput);
 
         if (!form.checkValidity()) {
             form.reportValidity();
+            editButton.disabled = false;
             return;
         }
-
-        const customerId = document.getElementById("customerId").value;
-        const firstName = document.querySelector("input[name='first_name']").value;
-        const lastName = document.querySelector("input[name='last_name']").value;
-        const phoneNumber = mask.masked.unmaskedValue;
-        const email = document.querySelector("input[name='email']").value;
-        const street = document.querySelector("input[name='street']").value;
-        const startDatetime = document.querySelector("input[name='start_datetime']").value;
-        const cleaningMasterName = document.querySelector("input[name='master']").value;
-        const finishDatetime = document.querySelector("input[name='end_datetime']").value;
-        const selectedService = document.querySelector("select[name='selected_service']").value;
-        const building = document.querySelector("select[name='building']").value;
-        const roomsNumber = document.querySelector("input[name='rooms_number']").value;
-        const squareFeet = document.querySelector("input[name='square_feet']").value;
-        const hasOwnEquipment = document.querySelector("select[name='use_equipment']").value;
-        const hasCleanWindows = document.querySelector("input[name='clean_windows']").checked;
-        const hasCleanOven = document.querySelector("input[name='clean_oven']").checked;
-        const hasCleanBasement = document.querySelector("input[name='clean_basement']").checked;
-        const hasMoveInCleaning = document.querySelector("input[name='move_in_cleaning']").checked;
-        const hasMoveOutCleaning = document.querySelector("input[name='move_out_cleaning']").checked;
-        const hasCleanFridge = document.querySelector("input[name='clean_fridge']").checked;
-
-        const booking = {
-            customerId: customerId,
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: phoneNumber,
-            email: email,
-            street: street,
-            startDatetime: startDatetime,
-            cleaningMasterName: cleaningMasterName,
-            finishDatetime: finishDatetime,
-            selectedService: selectedService,
-            building: building,
-            roomsNumber: roomsNumber,
-            squareFeet: squareFeet,
-            hasOwnEquipment: hasOwnEquipment,
-            hasCleanWindows: hasCleanWindows,
-            hasCleanOven: hasCleanOven,
-            hasCleanBasement: hasCleanBasement,
-            hasMoveInCleaning: hasMoveInCleaning,
-            hasMoveOutCleaning: hasMoveOutCleaning,
-            hasCleanFridge: hasCleanFridge,
-        };
 
         fetch(`/api/booking/${bookingId}`, {
             method: "PUT",
@@ -393,6 +348,41 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error(JSON.parse(error.message));
+            })
+            .finally(() => {
+                editButton.disabled = false;
             });
+    }
+
+    function getFormData() {
+        return {
+            firstName: document.querySelector("input[name='first_name']").value,
+            lastName: document.querySelector("input[name='last_name']").value,
+            phoneNumber: mask.masked.unmaskedValue,
+            email: document.querySelector("input[name='email']").value,
+            street: document.querySelector("input[name='street']").value,
+            startDatetime: document.querySelector("input[name='start_datetime']").value,
+            cleaningMasterName: document.querySelector("input[name='master']").value,
+            finishDatetime: document.querySelector("input[name='end_datetime']").value,
+            selectedService: document.querySelector("select[name='selected_service']").value,
+            building: document.querySelector("select[name='building']").value,
+            roomsNumber: document.querySelector("input[name='rooms_number']").value,
+            squareFeet: document.querySelector("input[name='square_feet']").value,
+            hasOwnEquipment: document.querySelector("select[name='use_equipment']").value,
+            hasCleanWindows: document.querySelector("input[name='clean_windows']").checked,
+            hasCleanOven: document.querySelector("input[name='clean_oven']").checked,
+            hasCleanBasement: document.querySelector("input[name='clean_basement']").checked,
+            hasMoveInCleaning: document.querySelector("input[name='move_in_cleaning']").checked,
+            hasMoveOutCleaning: document.querySelector("input[name='move_out_cleaning']").checked,
+            hasCleanFridge: document.querySelector("input[name='clean_fridge']").checked,
+        };
+    }
+    
+    function validateFinishDatetime(startDateTimeObj, finishDateTimeObj, finishDatetimeInput) {
+        if (finishDateTimeObj < startDateTimeObj) {
+            finishDatetimeInput.setCustomValidity("End time cannot be earlier than start time.");
+        } else {
+            finishDatetimeInput.setCustomValidity("");
+        }
     }
 });
