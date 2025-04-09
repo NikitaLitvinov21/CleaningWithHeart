@@ -141,7 +141,7 @@ footer {
 }
 
 .overflow-x-auto {
-    margin: 30px 0;
+    margin-top: 30px;
     overflow-x: auto !important;
     width: 90vw;
 }
@@ -197,8 +197,8 @@ footer {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     width: 90%;
 }
 
@@ -488,7 +488,22 @@ footer {
 
 @media (max-width: 525px) {
 
+    .overflow-x-auto {
+        width: 95vw;
+    }
+
     .copyright {
         font-size: 0.9rem;
+    }
+
+    .pagination-controls {
+        margin-bottom: 10px;
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .form-inline {
+        align-self: flex-start;
     }
 }
