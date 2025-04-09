@@ -9,7 +9,7 @@ body {
     padding: 0;
     font-family: "Rubik", sans-serif;
     font-size: 16px;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 h3,
@@ -74,6 +74,7 @@ footer {
 
 .header-container {
     width: 95%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -115,13 +116,18 @@ footer {
     border-top: 2px solid #F5F6F7;
     display: flex;
     align-items: center;
-    margin: 0 20px;
+}
+
+.footer-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .copyright {
     color: #7D8FB3;
     font-weight: 500;
-    padding-bottom: 2px;
+    margin: 0 20px;
 }
 
 .calendar-content {
@@ -136,8 +142,9 @@ footer {
 .calendar {
     max-width: 1200px;
     width: 100%;
-    margin: 20px 0;
-    height: 95%;
+    height: 100%;
+    margin-top: 20px;
+    height: calc(100% - 20px);
 }
 
 .fc .fc-view-harness-active>.fc-view {
@@ -450,13 +457,26 @@ input.add-place-checkbox {
         flex-direction: column;
     }
 
+    .calendar {
+        margin-top: 10px;
+        height: calc(100% - 10px);
+    }
+
+    .fc .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 10px;
+    }
+
     .fc .fc-toolbar-title {
-        margin: 10px 0;
+        margin: 5px 0;
     }
 }
 
-
 @media (max-width: 525px) {
+
+    .copyright {
+        font-size: 0.9rem;
+    }
+
     .modal-content {
         min-width: 360px;
         width: 98%;

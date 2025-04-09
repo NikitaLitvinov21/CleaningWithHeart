@@ -9,7 +9,7 @@ body {
     padding: 0;
     font-family: "Rubik", sans-serif;
     font-size: 16px;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 h3,
@@ -78,6 +78,7 @@ footer {
     align-items: center;
     justify-content: space-between;
     align-self: center;
+    height: 100%;
 }
 
 .logo img {
@@ -115,13 +116,19 @@ footer {
     border-top: 2px solid #F5F6F7;
     display: flex;
     align-items: center;
-    margin: 0 20px;
+}
+
+.footer-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .copyright {
     color: #7D8FB3;
     font-weight: 500;
-    padding-bottom: 2px;
+    margin: 0 20px;
+    width: 100%;
 }
 
 .customers-content {
@@ -477,4 +484,11 @@ footer {
 
 .modal-buttons-footer.delete {
     margin-top: 0;
+}
+
+@media (max-width: 525px) {
+
+    .copyright {
+        font-size: 0.9rem;
+    }
 }
