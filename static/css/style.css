@@ -927,6 +927,7 @@ input.add-place-checkbox {
     outline: none;
     border: none;
     width: 100%;
+    height: 44px;
 }
 
 .customer-label {
@@ -967,6 +968,17 @@ input.add-place-checkbox {
 .flashes {
     width: 85%;
     margin: 0 auto;
+}
+
+input.is-invalid {
+    border: 2px solid #ff5151;
+}
+
+.flatpickr-disabled-time {
+    color: #999 !important;
+    background: #f8f8f8 !important;
+    text-decoration: line-through;
+    pointer-events: none;
 }
 
 /* End booking page */
@@ -1214,15 +1226,16 @@ input.add-place-checkbox {
         align-items: center;
     }
 
-    .text-content.footer p  {
+    .text-content.footer p {
         display: none;
     }
 
     .contact.footer {
         display: none;
     }
-    .copyright{
-        font-size: 0.7rem ;
+
+    .copyright {
+        font-size: 0.7rem;
     }
 }
 

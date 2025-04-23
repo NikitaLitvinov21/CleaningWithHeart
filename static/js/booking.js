@@ -6,19 +6,42 @@ const urlBase = location.protocol + "//" + location.host;
 form.addEventListener("submit", saveBooking);
 
 document.addEventListener("DOMContentLoaded", () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = new String(now.getMonth() + 1).padStart(2, "0");
-    const day = new String(now.getDate()).padStart(2, "0");
-    const hours = new String(now.getHours()).padStart(2, "0");
-    const minutes = new String(now.getMinutes()).padStart(2, "0");
-    const currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
-    const dateTimeInput = form.querySelector('input[name="start_datetime"]');
-    dateTimeInput.min = currentDateTime;
+    const pickerElement = document.getElementById("start_datetime");
+
+    Promise.all([fetch("/api/booked-intervals").then((res) => res.json())])
+        .then(([intervalsData]) => {
+            const config = {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                minDate: "today",
+                maxDate: new Date(new Date().setDate(new Date().getDate() + 60)),
+                minTime: "09:00",
+                maxTime: "14:00",
+            };
+
+            if (intervalsData.intervals) {
+                const disabledIntervals = intervalsData.intervals.map((interval) => {
+                    return [
+                        new Date(interval.from).toISOString(),
+                        new Date(interval.to).toISOString(),
+                    ];
+                });
+
+                console.log(disabledIntervals)
+                config.disable = disabledIntervals.flat();
+            }
+
+            flatpickr(pickerElement, config);
+        })
+        .catch((error) => {
+            console.error("Ошибка при инициализации бронирования:", error);
+            alert("Произошла ошибка при загрузке данных календаря");
+        });
 });
 
-const mask = new IMask(phoneInput,{
-    mask:"+{1}(000)000-0000"
+
+const mask = new IMask(phoneInput, {
+    mask: "+{1}(000)000-0000"
 })
 
 addressInput.addEventListener("input", () => {
@@ -33,7 +56,7 @@ addressInput.addEventListener("input", () => {
                 addressesSuggestions.innerHTML = ``;
 
                 if (json.addresses.length > 0) {
-                    addressesSuggestions.style.display = "block"; // Показываем список
+                    addressesSuggestions.style.display = "block";
 
                     json.addresses.forEach((address) => {
                         const li = document.createElement("li");
@@ -42,7 +65,7 @@ addressInput.addEventListener("input", () => {
                         addressesSuggestions.appendChild(li);
                     });
                 } else {
-                    addressesSuggestions.style.display = "none"; // Скрываем, если пусто
+                    addressesSuggestions.style.display = "none";
                 }
             });
     } else {
@@ -50,7 +73,6 @@ addressInput.addEventListener("input", () => {
     }
 });
 
-// Закрываем список при потере фокуса
 document.addEventListener("click", (e) => {
     if (!addressInput.contains(e.target) && !addressesSuggestions.contains(e.target)) {
         addressesSuggestions.style.display = "none";
@@ -61,7 +83,7 @@ function selectAddressesSuggestion(suggestion) {
     addressInput.value = suggestion;
     addressesSuggestions.style.display = "none";
 }
-    
+
 addressInput.addEventListener("blur", () => {
     setTimeout(() => {
         addressesSuggestions.innerHTML = ``;
@@ -76,12 +98,15 @@ function saveBooking(event) {
         return;
     }
 
+    const startDatetimeInput = document.querySelector("input[name='start_datetime']");
+    const startDateObj = flatpickr.parseDate(startDatetimeInput.value, "Y-m-d h:i K");
+    const startDatetime = toLocalISO(startDateObj);
+
     const firstName = document.querySelector("input[name='first_name']").value;
     const lastName = document.querySelector("input[name='last_name']").value;
     const phoneNumber = mask.masked.unmaskedValue;
     const email = document.querySelector("input[name='email']").value;
     const street = document.querySelector("input[name='street']").value;
-    const startDatetime = document.querySelector("input[name='start_datetime']").value;
     const selectedService = document.querySelector("select[name='selected_service']").value;
     const building = document.querySelector("select[name='building']").value;
     const roomsNumber = document.querySelector("input[name='rooms_number']").value;
@@ -140,4 +165,17 @@ function saveBooking(event) {
         .catch((error) => {
             console.error(JSON.parse(error.message));
         });
+}
+
+function toLocalISO(date) {
+    const pad = (n) => String(n).padStart(2, "0");
+    return [
+        date.getFullYear(),
+        pad(date.getMonth() + 1),
+        pad(date.getDate())
+    ].join("-") + "T" + [
+        pad(date.getHours()),
+        pad(date.getMinutes()),
+        pad(date.getSeconds())
+    ].join(":");
 }

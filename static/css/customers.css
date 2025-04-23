@@ -381,6 +381,15 @@ footer {
     position: relative;
 }
 
+.add-place.textarea{
+    height: 100px;
+    align-items: start;
+}
+textarea.add-place-customer-input{
+    height: 100px;
+    padding: 5px 0px 0px 0px;
+}
+
 .add-place-customer-input {
     color: #434343;
     text-align: left;

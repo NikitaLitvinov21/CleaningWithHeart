@@ -68,55 +68,70 @@
                                 <form method="POST" id="bookingForm" class="booking-form">
                                     <input type="hidden" id="customerId">
                                     <h3>MAIN INFORMATION</h3>
-                                    <div class="add-place-horizontal">
-                                        <div class="customer-formgroup">
-                                            <label class="customer-label">First Name*</label>
-                                            <input type="text" name="first_name" class="add-place-customer-input"
-                                                placeholder="First Name" value="" required
-                                                pattern="^[^\d\!\@\#\$\%\^\&\*\=\+\~\/\+\;\:\?\{\}]*$" maxlength="30">
+                                    <div class="add-place-horizontal select">
+                                        <select class="form-select" name="selected_customer" id="customerSelect">
+                                            <option selected disabled value="">Choose existing customer</option>
+                                        </select>
+                                    </div>
+                                    <div class="add-place-horizontal select">
+                                        <button type="button" class="customer-button" id="customerButton">ADD NEW
+                                            CUSTOMER</button>
+                                    </div>
+                                    <div id="newCustomerFields" class="d-none">
+                                        <div class="add-place-horizontal">
+                                            <div class="customer-formgroup">
+                                                <label class="customer-label">First Name*</label>
+                                                <input type="text" name="first_name" class="add-place-customer-input"
+                                                    placeholder="First Name"
+                                                    pattern="^[^\d\!\@\#\$\%\^\&\*\=\+\~\/\+\;\:\?\{\}]*$"
+                                                    maxlength="30">
+                                            </div>
+                                            <div class="customer-formgroup">
+                                                <label class="customer-label">Last Name</label>
+                                                <input type="text" name="last_name" class="add-place-customer-input"
+                                                    placeholder="Last Name"
+                                                    pattern="^[^\d\!\@\#\$\%\^\&\*\=\+\~\/\+\;\:\?\{\}]*$"
+                                                    maxlength="30">
+                                            </div>
                                         </div>
-                                        <div class="customer-formgroup">
-                                            <label class="customer-label">Last Name</label>
-                                            <input type="text" name="last_name" class="add-place-customer-input"
-                                                placeholder="Last Name" value=""
-                                                pattern="^[^\d\!\@\#\$\%\^\&\*\=\+\~\/\+\;\:\?\{\}]*$" maxlength="30">
+                                        <div class="add-place-horizontal">
+                                            <div class="customer-formgroup">
+                                                <label class="customer-label">Phone Number*</label>
+                                                <input type="tel" name="phone_number" class="add-place-customer-input"
+                                                    id="phone_number" maxlength="15" placeholder="+1(___)___-____"
+                                                    pattern="^\+\d{1}\(\d{3}\)\d{3}-\d{4}$">
+                                            </div>
+                                            <div class="customer-formgroup">
+                                                <label class="customer-label">Email*</label>
+                                                <input type="email" name="email" class="add-place-customer-input"
+                                                    maxlength="30" placeholder="customer@mail.com">
+                                            </div>
+                                        </div>
+                                        <div class="add-place-horizontal">
+                                            <div class="customer-formgroup single">
+                                                <label class="customer-label">Street*</label>
+                                                <input type="text" name="street" class="add-place-customer-input single"
+                                                    maxlength="254" placeholder="Street">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="add-place-horizontal">
-                                        <div class="customer-formgroup">
-                                            <label class="customer-label">Phone Number*</label>
-                                            <input type="tel" name="phone_number" class="add-place-customer-input"
-                                                id="phone_number" maxlength="15" required placeholder="+1(___)___-____"
-                                                pattern="^\+\d{1}\(\d{3}\)\d{3}-\d{4}$">
-                                        </div>
-                                        <div class="customer-formgroup">
-                                            <label class="customer-label">Email*</label>
-                                            <input type="email" name="email" class="add-place-customer-input"
-                                                maxlength="30" required value="" placeholder="customer@mail.com">
-                                        </div>
-                                    </div>
-                                    <div class="add-place-horizontal">
-                                        <div class="customer-formgroup">
-                                            <label class="customer-label">Street*</label>
-                                            <input type="text" name="street" class="add-place-customer-input"
-                                                maxlength="254" placeholder="Street" required value="">
-                                        </div>
                                         <div class="customer-formgroup">
                                             <label class="customer-label">Start date and time*</label>
                                             <input type="datetime-local" name="start_datetime"
                                                 class="add-place-customer-input" required value="">
                                         </div>
-                                    </div>
-                                    <div class="add-place-horizontal">
-                                        <div class="customer-formgroup">
-                                            <label class="customer-label">Master</label>
-                                            <input type="text" name="master" class="add-place-customer-input"
-                                                maxlength="50" placeholder="Master" value="">
-                                        </div>
                                         <div class="customer-formgroup">
                                             <label class="customer-label">End date and time*</label>
                                             <input type="datetime-local" name="end_datetime"
                                                 class="add-place-customer-input" required value="">
+                                        </div>
+                                    </div>
+                                    <div class="add-place-horizontal">
+                                        <div class="customer-formgroup single">
+                                            <label class="customer-label">Master</label>
+                                            <input type="text" name="master" class="add-place-customer-input single"
+                                                maxlength="50" placeholder="Master" value="">
                                         </div>
                                     </div>
                                     <h3>SERVICES WE PROVIDE</h3>
@@ -167,13 +182,14 @@
                                     <h3>MORE INFORMATION</h3>
                                     <div class="add-place-horizontal select">
                                         <select class="form-select" name="building" required>
-                                            <option selected disabled value="">Cleaning your house or apartment?*</option>
+                                            <option selected disabled value="">Cleaning your house or apartment?*
+                                            </option>
                                             <option value="HOUSE">House</option>
                                             <option value="APARTMENT">Apartment</option>
                                         </select>
                                     </div>
                                     <div class="add-place-horizontal">
-                                        <div class="customer-formgroup">
+                                        <div class="customer-formgroup rooms-number">
                                             <label class="customer-label">Number of rooms*</label>
                                             <div class="add-place">
                                                 <input type="number" name="rooms_number"

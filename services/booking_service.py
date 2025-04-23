@@ -83,7 +83,7 @@ class BookingService:
                 session.close()
 
     def calculate_notify_at(self, start_datetime: datetime) -> datetime:
-        return start_datetime - timedelta(hours=1)
+        return start_datetime - timedelta(days=1)
 
     @transaction
     def retrieve_booking_count(
@@ -212,3 +212,16 @@ class BookingService:
             booking_id=booking_id, session=session
         )
         session.delete(booking)
+
+    @transaction
+    def retrieve_bookings_in_range(
+        self,
+        start: datetime,
+        end: datetime,
+        session: Session,
+    ) -> List[Booking]:
+        return (
+            session.query(Booking)
+            .filter(Booking.start_datetime >= start, Booking.start_datetime <= end)
+            .all()
+        )

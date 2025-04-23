@@ -157,7 +157,7 @@ function openEditModal(customerId) {
             mask.value = customer.phoneNumber;
             document.querySelector("input[name='email']").value = customer.email;
             document.querySelector("input[name='street']").value = customer.street;
-            document.querySelector("input[name='notes']").value = customer.specialNotes || "";
+            document.querySelector("textarea[name='notes']").value = customer.specialNotes || "";
             document.querySelector("#edit-button").setAttribute("data-customer-id", customerId);
 
             new bootstrap.Modal(document.getElementById("customerModal")).show();
@@ -194,7 +194,7 @@ function editCustomer(customerId) {
     const phoneNumber = mask.masked.unmaskedValue;
     const email = document.querySelector("input[name='email']").value;
     const street = document.querySelector("input[name='street']").value;
-    const specialNotes = document.querySelector("input[name='notes']").value;
+    const specialNotes = document.querySelector("textarea[name='notes']").value;
 
     const updatedCustomer = {
         firstName: firstName,

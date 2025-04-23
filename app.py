@@ -9,6 +9,7 @@ from common.exceptions.error_handling import enable_errorhandlers
 from config import get_config
 from database.connector import create_tables
 from resources.addresses_resource import AddressesResource
+from resources.booked_intervals_resource import BookedIntervalsResource
 from resources.booking_resource import BookingResource
 from resources.bookings_resource import BookingsResource
 from resources.customer_resource import CustomerResource
@@ -61,6 +62,7 @@ app.add_url_rule(
 
 api.add_resource(BookingResource, "/api/booking/<int:booking_id>")
 api.add_resource(BookingsResource, "/api/booking")
+api.add_resource(BookedIntervalsResource, "/api/booked-intervals")
 api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
 api.add_resource(CustomersResource, "/api/customers")
 api.add_resource(EventsResource, "/api/events")
