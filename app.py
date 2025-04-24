@@ -16,6 +16,7 @@ from resources.customer_resource import CustomerResource
 from resources.customers_resource import CustomersResource
 from resources.events_resource import EventsResource
 from resources.login_resource import LoginResource
+from resources.unavailable_date_resource import UnavailableDateResource
 from views.booking_view import BookingView
 from views.calendar_view import CalendarView
 from views.customers_view import CustomersView
@@ -67,6 +68,11 @@ api.add_resource(CustomerResource, "/api/customers/<int:customer_id>")
 api.add_resource(CustomersResource, "/api/customers")
 api.add_resource(EventsResource, "/api/events")
 api.add_resource(AddressesResource, "/api/addresses")
+api.add_resource(
+    UnavailableDateResource,
+    "/api/unavailable-dates",
+    "/api/unavailable-dates/<int:id_>",
+)
 
 twilio_worker = TwilioWorker(get_config("twilio"))
 twilio_worker.run()

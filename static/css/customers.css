@@ -193,6 +193,10 @@ footer {
     padding: 5px;
 }
 
+.expand-column.notes {
+    white-space: wrap;
+}
+
 .pagination-controls {
     align-items: center;
     display: flex;

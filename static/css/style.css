@@ -26,6 +26,10 @@ ul {
     padding: 0;
 }
 
+input:disabled {
+    background-color: #fff;
+}
+
 ::-webkit-scrollbar {
     border-radius: 2em;
     width: 10px;
@@ -896,6 +900,11 @@ input.add-place-checkbox {
     justify-content: space-between;
 }
 
+.add-place.date-time {
+    width: 230px;
+    padding: 0px 0px 0px 20px;
+}
+
 .add-place {
     border-style: solid;
     border-color: #dedede;
@@ -1001,6 +1010,11 @@ input.is-invalid {
         width: 950px;
     }
 
+    .add-place.date-time {
+        width: 190px;
+        padding: 0 0 0 5px;
+    }
+
     .add-place,
     .addresses-suggestions {
         width: 400px;
@@ -1052,6 +1066,11 @@ input.is-invalid {
 
     .add-place {
         width: 100%;
+    }
+
+    .add-place.date-time {
+        width: 100%;
+        padding: 0 0 0 20px;
     }
 
     .save-button {

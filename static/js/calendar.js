@@ -37,8 +37,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => console.error("Error loading booking", error));
         },
         select: function (info) {
-            openSaveModal(info);
+            const timeZone = 'UTC';
+
+            const startStr = info.start.toLocaleString('sv-SE', { timeZone, hour12: false }).replace(' ', 'T');
+            const endStr = info.end.toLocaleString('sv-SE', { timeZone, hour12: false }).replace(' ', 'T');
+
+            const diffInMinutes = (info.end - info.start) / 60000;
+
+            if (diffInMinutes <= 30) {
+                openSaveModal(info);
+                return;
+            }
+
+            const payload = {
+                startDatetime: startStr,
+                finishDatetime: endStr
+            };
+
+            fetch('/api/unavailable-dates', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        calendar.addEvent({
+                            start: info.start,
+                            end: info.end,
+                            display: 'background',
+                            backgroundColor: '#ff5e5e',
+                            overlap: false
+                        });
+                    } else {
+                        return response.json().then(data => {
+                            alert("Error: " + (data.message));
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error saving an unavailable date:", error);
+                });
         },
+
         eventDrop: function (info) {
             patchBooking(info.event);
         },
@@ -48,6 +90,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     calendar.render();
+
+    fetch('/api/unavailable-dates')
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(entry => {
+                calendar.addEvent({
+                    start: entry.startDatetime,
+                    end: entry.finishDatetime,
+                    display: 'background',
+                    backgroundColor: '#ff5e5e',
+                    overlap: false,
+                    allDay: isAllDay(entry.startDatetime, entry.finishDatetime)
+                });
+            });
+        })
+        .catch(err => {
+            console.error("Error loading an unavailable date:", err);
+        });
+
+
+    function isAllDay(start, end) {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        return (
+            startDate.getHours() === 0 &&
+            startDate.getMinutes() === 0 &&
+            endDate.getHours() === 0 &&
+            endDate.getMinutes() === 0
+        );
+    }
 
     function formatPhoneNumber(phoneNumber) {
         return phoneNumber.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "+$1 ($2) $3-$4");

@@ -115,7 +115,7 @@ function updateCustomersTable(customers) {
             <td class="expand-column text-center">${formatPhoneNumber(customer.phoneNumber)}</td>
             <td class="expand-column text-center">${customer.email}</td>
             <td class="expand-column text-center">${customer.street}</td>
-            <td class="expand-column text-center">${customer.specialNotes || "-"}</td>
+            <td class="expand-column text-center notes">${customer.specialNotes || "-"}</td>
             <td class="expand-column text-center">
                 <span class="ceil-text text-nowrap">
                     <img src="/static/images/svg/edit-icon.svg" alt="edit-icon" 

@@ -27,8 +27,6 @@ class BookedIntervalsResource(Resource):
                 if b.start_datetime and b.finish_datetime
             ]
 
-            print(intervals)
-
             return Response(
                 status=200,
                 content_type="application/json",
