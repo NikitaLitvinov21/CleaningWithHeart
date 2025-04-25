@@ -162,6 +162,24 @@ footer {
     cursor: pointer;
 }
 
+.fc-event.unavailable-event {
+    pointer-events: auto;
+    border: none;
+    opacity: 0.6;
+    cursor: default;
+    transition: all 0.2s ease;
+    border: 2px solid rgb(255, 0, 0);
+    background: #ff5e5e;
+    color: #ffffff;
+}
+
+.fc-event.unavailable-event:hover {
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 .popover-header span {
     color: #2c3e50;
     text-align: left;

@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlBase = location.protocol + '//' + location.host;
     const calendarEl = document.getElementById('calendar');
     let currentPopover = null;
+    let deleteType = null;
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         timeZone: 'America/Toronto',
@@ -28,22 +29,61 @@ document.addEventListener('DOMContentLoaded', () => {
             end: "prev,next today",
         },
         initialView: "timeGridWeek",
-        eventColor: "#2c3e50",
-        events: `${urlBase}/api/events`,
+
+        eventSources: [
+            {
+                url: `${urlBase}/api/events`,
+                method: 'GET',
+                color: '#2c3e50'
+            },
+            {
+                url: `${urlBase}/api/unavailable-dates`,
+                method: 'GET',
+                color: '#ff5e5e',
+                overlap: false,
+                extraParams: () => ({ timestamp: Date.now() }),
+                success: (events) => {
+                    return events.map(e => ({
+                        ...e,
+                        start: e.startDatetime,
+                        end: e.finishDatetime,
+                        allDay: isAllDay(e.startDatetime, e.finishDatetime),
+                        id: `unavailable-${e.id}`,
+                        title: '',
+                        color: '#ff5e5e',
+                        textColor: 'transparent',
+                        overlap: false,
+                        editable: false,
+                        classNames: ['unavailable-event'],
+                        extendedProps: {
+                            id: e.id,
+                            isUnavailable: true
+                        }
+                    }));
+                }
+            }
+        ],
+
         eventClick: function (info) {
-            fetch(`/api/booking/${info.event.id}`)
+            const event = info.event;
+
+            if (event.extendedProps?.isUnavailable) {
+                openDeleteModal(event, "unavailable");
+                return;
+            }
+
+            fetch(`/api/booking/${event.id}`)
                 .then(response => response.json())
-                .then(data => showPopover(info.el, info.event, data))
+                .then(data => showPopover(info.el, event, data))
                 .catch(error => console.error("Error loading booking", error));
         },
+
         select: function (info) {
             const timeZone = 'UTC';
-
             const startStr = info.start.toLocaleString('sv-SE', { timeZone, hour12: false }).replace(' ', 'T');
             const endStr = info.end.toLocaleString('sv-SE', { timeZone, hour12: false }).replace(' ', 'T');
 
             const diffInMinutes = (info.end - info.start) / 60000;
-
             if (diffInMinutes <= 30) {
                 openSaveModal(info);
                 return;
@@ -63,13 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
                 .then(response => {
                     if (response.ok) {
-                        calendar.addEvent({
-                            start: info.start,
-                            end: info.end,
-                            display: 'background',
-                            backgroundColor: '#ff5e5e',
-                            overlap: false
-                        });
+                        calendar.refetchEvents();
                     } else {
                         return response.json().then(data => {
                             alert("Error: " + (data.message));
@@ -84,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         eventDrop: function (info) {
             patchBooking(info.event);
         },
+
         eventResize: function (info) {
             patchBooking(info.event);
         }
@@ -91,29 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calendar.render();
 
-    fetch('/api/unavailable-dates')
-        .then(res => res.json())
-        .then(data => {
-            data.forEach(entry => {
-                calendar.addEvent({
-                    start: entry.startDatetime,
-                    end: entry.finishDatetime,
-                    display: 'background',
-                    backgroundColor: '#ff5e5e',
-                    overlap: false,
-                    allDay: isAllDay(entry.startDatetime, entry.finishDatetime)
-                });
-            });
-        })
-        .catch(err => {
-            console.error("Error loading an unavailable date:", err);
-        });
-
-
     function isAllDay(start, end) {
         const startDate = new Date(start);
         const endDate = new Date(end);
-
         return (
             startDate.getHours() === 0 &&
             startDate.getMinutes() === 0 &&
@@ -221,6 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
             customerButton.classList.remove("new-customer");
             customerButton.textContent = "ADD NEW CUSTOMER";
 
+            customerSelect.disabled = false;
+
             allFields.forEach(name => {
                 const field = document.querySelector(`[name="${name}"]`);
                 if (field) {
@@ -233,6 +250,8 @@ document.addEventListener('DOMContentLoaded', () => {
             customerIdInput.value = "";
             customerButton.classList.add("new-customer");
             customerButton.textContent = "CANCEL NEW CUSTOMER";
+
+            customerSelect.disabled = true;
 
             allFields.forEach(name => {
                 const field = document.querySelector(`[name="${name}"]`);
@@ -354,9 +373,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error("Error loading booking data:", error));
     }
 
-    function openDeleteModal(event) {
+    function openDeleteModal(event, type = "booking") {
         closePopover();
-        document.querySelector("#delete-button").setAttribute("data-booking-id", event.id);
+        deleteType = type;
+        const id = type === "unavailable" ? event.extendedProps.id : event.id;
+        document.querySelector("#delete-button").setAttribute("data-id", id);
         const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
         modal.show();
     }
@@ -367,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveBooking() {
         const saveButton = document.querySelector('#saveButton');
-        saveButton.disabled = true; 
+        saveButton.disabled = true;
 
         const booking = getFormData();
         const startDateTimeObj = new Date(booking.startDatetime);
@@ -415,27 +436,42 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-
     document.querySelector("#delete-button").addEventListener("click", function () {
-        const bookingId = this.getAttribute("data-booking-id");
-        deleteBooking(bookingId);
+        const id = this.getAttribute("data-id");
+        if (deleteType === "unavailable") {
+            deleteUnavailable(id);
+        } else {
+            deleteBooking(id);
+        }
     });
 
-    function deleteBooking(bookingId) {
-        fetch(`/api/booking/${bookingId}`, {
+    function deleteUnavailable(id) {
+        fetch(`/api/unavailable-dates/${id}`, {
             method: "DELETE",
         })
-            .then(async response => {
+            .then(response => {
                 if (response.ok) {
-                    window.location.reload();
-                    return response.json();
-                } else {
-                    const responseWithError = await response.text();
-                    throw new Error(responseWithError);
+                    calendar.refetchEvents();
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
                 }
             })
             .catch(error => {
-                console.error(JSON.parse(error.message));
+                console.error("Error deleting an unavailable date:", error);
+            });
+    }
+
+    function deleteBooking(id) {
+        fetch(`/api/booking/${id}`, {
+            method: "DELETE",
+        })
+            .then(response => {
+                if (response.ok) {
+                    calendar.refetchEvents();
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting a booking:", error);
             });
     }
 
@@ -546,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hasCleanFridge: document.querySelector("input[name='clean_fridge']").checked,
         };
     }
-    
+
     function validateFinishDatetime(startDateTimeObj, finishDateTimeObj, finishDatetimeInput) {
         if (finishDateTimeObj < startDateTimeObj) {
             finishDatetimeInput.setCustomValidity("End time cannot be earlier than start time.");

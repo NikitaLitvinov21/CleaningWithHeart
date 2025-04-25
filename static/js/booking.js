@@ -79,14 +79,6 @@ $(document).ready(() => {
                     disableTimeRanges: disabledRanges
                 });
 
-                /*                $timeInput.timepicker({
-                    timeFormat: 'h:i A',
-                    step: 30,
-                    minTime: '9:00am',
-                    maxTime: '2:00pm',
-                    disableTimeRanges: disabledRanges
-                }); */
-
                 $timeInput.prop('disabled', false);
             });
     });
