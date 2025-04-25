@@ -83,7 +83,7 @@ class BookingService:
                 session.close()
 
     def calculate_notify_at(self, start_datetime: datetime) -> datetime:
-        return start_datetime - timedelta(hours=1)
+        return start_datetime - timedelta(hours=2)
 
     @transaction
     def retrieve_booking_count(
