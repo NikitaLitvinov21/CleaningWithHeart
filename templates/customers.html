@@ -128,11 +128,11 @@
                                         <input type="text" name="street" class="add-place-customer-input"
                                             maxlength="254" placeholder="Street" required value="">
                                     </div>
-                                    <div class="add-place">
+                                    <div class="add-place textarea">
                                         <img src="{{ url_for('static', filename='images/svg/edit-icon.svg') }}"
                                             alt="notes">
-                                        <input type="text" name="notes" class="add-place-customer-input" maxlength="254"
-                                            placeholder="Special notes" value="">
+                                        <textarea type="text" name="notes" class="add-place-customer-input" maxlength="254"
+                                            placeholder="Special notes" value=""></textarea>
                                     </div>
                                     <div class="modal-buttons-footer" id="modalFooter">
                                         <button type="button" id="edit-button" class="save-button modal-footer-button">

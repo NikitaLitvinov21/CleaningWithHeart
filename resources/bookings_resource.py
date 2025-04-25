@@ -69,7 +69,7 @@ class BookingsResource(Resource):
                 data.get("startDatetime"),
             )
             cleaning_master_name: str = data.get("cleaningMasterName") or None
-            default_cleaning_duration = timedelta(hours=2)
+            default_cleaning_duration = timedelta(hours=4)
             finish_datetime: datetime = (
                 iso_string_to_datetime_utc(data.get("finishDatetime"))
                 if data.get("finishDatetime")

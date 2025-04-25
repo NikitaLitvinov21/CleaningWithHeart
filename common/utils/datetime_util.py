@@ -14,6 +14,10 @@ def datetime_to_iso8601(datetime_instance: datetime) -> str:
     return datetime_instance.strftime(ISO8601_DATETIME_FORMAT)
 
 
+def datetime_to_str_for_calendar(dt: datetime) -> str:
+    return dt.isoformat()
+
+
 def datetime_to_str(dt: Optional[datetime]) -> Optional[str]:
     """Convert datetime to local datetime string."""
 

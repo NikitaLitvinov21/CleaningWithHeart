@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlBase = location.protocol + '//' + location.host;
     const calendarEl = document.getElementById('calendar');
     let currentPopover = null;
+    let deleteType = null;
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         timeZone: 'America/Toronto',
@@ -12,6 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
         dayMaxEventRows: true,
         allDaySlot: false,
         nowIndicator: true,
+        businessHours: {
+            daysOfWeek: [1, 2, 3, 4, 5],
+            startTime: '9:00',
+            endTime: '18:00',
+        },
         views: {
             timeGrid: {
                 eventMaxStack: 3,
@@ -23,26 +29,113 @@ document.addEventListener('DOMContentLoaded', () => {
             end: "prev,next today",
         },
         initialView: "timeGridWeek",
-        eventColor: "#2c3e50",
-        events: `${urlBase}/api/events`,
+
+        eventSources: [
+            {
+                url: `${urlBase}/api/events`,
+                method: 'GET',
+                color: '#2c3e50'
+            },
+            {
+                url: `${urlBase}/api/unavailable-dates`,
+                method: 'GET',
+                color: '#ff5e5e',
+                overlap: false,
+                extraParams: () => ({ timestamp: Date.now() }),
+                success: (events) => {
+                    return events.map(e => ({
+                        ...e,
+                        start: e.startDatetime,
+                        end: e.finishDatetime,
+                        allDay: isAllDay(e.startDatetime, e.finishDatetime),
+                        id: `unavailable-${e.id}`,
+                        title: '',
+                        color: '#ff5e5e',
+                        textColor: 'transparent',
+                        overlap: false,
+                        editable: false,
+                        classNames: ['unavailable-event'],
+                        extendedProps: {
+                            id: e.id,
+                            isUnavailable: true
+                        }
+                    }));
+                }
+            }
+        ],
+
         eventClick: function (info) {
-            fetch(`/api/booking/${info.event.id}`)
+            const event = info.event;
+
+            if (event.extendedProps?.isUnavailable) {
+                openDeleteModal(event, "unavailable");
+                return;
+            }
+
+            fetch(`/api/booking/${event.id}`)
                 .then(response => response.json())
-                .then(data => showPopover(info.el, info.event, data))
+                .then(data => showPopover(info.el, event, data))
                 .catch(error => console.error("Error loading booking", error));
         },
+
         select: function (info) {
-            openSaveModal(info);
+            const timeZone = 'UTC';
+            const startStr = info.start.toLocaleString('sv-SE', { timeZone, hour12: false }).replace(' ', 'T');
+            const endStr = info.end.toLocaleString('sv-SE', { timeZone, hour12: false }).replace(' ', 'T');
+
+            const diffInMinutes = (info.end - info.start) / 60000;
+            if (diffInMinutes <= 30) {
+                openSaveModal(info);
+                return;
+            }
+
+            const payload = {
+                startDatetime: startStr,
+                finishDatetime: endStr
+            };
+
+            fetch('/api/unavailable-dates', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        calendar.refetchEvents();
+                    } else {
+                        return response.json().then(data => {
+                            alert("Error: " + (data.message));
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error saving an unavailable date:", error);
+                });
         },
+
         eventDrop: function (info) {
             patchBooking(info.event);
         },
+
         eventResize: function (info) {
             patchBooking(info.event);
         }
     });
 
     calendar.render();
+
+    function isAllDay(start, end) {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        return (
+            startDate.getHours() === 0 &&
+            startDate.getMinutes() === 0 &&
+            endDate.getHours() === 0 &&
+            endDate.getMinutes() === 0
+        );
+    }
 
     function formatPhoneNumber(phoneNumber) {
         return phoneNumber.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "+$1 ($2) $3-$4");
@@ -125,11 +218,100 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById("bookingForm");
 
+    const customerSelect = document.getElementById("customerSelect");
+    const customerButton = document.getElementById("customerButton");
+    const newCustomerFields = document.getElementById("newCustomerFields");
+    const customerIdInput = document.getElementById("customerId");
+
+    customerButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        const isUsingNew = !newCustomerFields.classList.contains("d-none");
+
+        newCustomerFields.classList.toggle("d-none");
+
+        const allFields = ["first_name", "last_name", "phone_number", "email", "street"];
+        const requiredFields = ["first_name", "phone_number", "email", "street"];
+
+        if (isUsingNew) {
+            customerButton.classList.remove("new-customer");
+            customerButton.textContent = "ADD NEW CUSTOMER";
+
+            customerSelect.disabled = false;
+
+            allFields.forEach(name => {
+                const field = document.querySelector(`[name="${name}"]`);
+                if (field) {
+                    field.value = "";
+                    field.removeAttribute("required");
+                }
+            });
+        } else {
+            customerSelect.value = "";
+            customerIdInput.value = "";
+            customerButton.classList.add("new-customer");
+            customerButton.textContent = "CANCEL NEW CUSTOMER";
+
+            customerSelect.disabled = true;
+
+            allFields.forEach(name => {
+                const field = document.querySelector(`[name="${name}"]`);
+                if (field) field.value = "";
+            });
+
+            requiredFields.forEach(name => {
+                const field = document.querySelector(`[name="${name}"]`);
+                if (field) field.setAttribute("required", "required");
+            });
+        }
+    });
+
+    customerSelect.addEventListener("change", function () {
+        if (customerSelect.value) {
+            newCustomerFields.classList.add("d-none");
+            ["first_name", "last_name", "phone_number", "email", "street"].forEach(name => {
+                document.querySelector(`[name="${name}"]`).value = "";
+            });
+            customerIdInput.value = customerSelect.value;
+        }
+    });
+
+    function loadCustomerOptions(selectedCustomerId = null) {
+        const placeholderOption = customerSelect.querySelector("option[value='']");
+        customerSelect.innerHTML = "";
+
+        if (placeholderOption) {
+            customerSelect.appendChild(placeholderOption);
+        }
+
+        fetch("/api/customers")
+            .then(res => res.json())
+            .then(data => {
+                const customers = data.customers;
+                customers.forEach(customer => {
+                    const option = document.createElement("option");
+                    option.value = customer.id;
+                    option.textContent = `${customer.firstName} ${customer.lastName}`;
+                    customerSelect.appendChild(option);
+                });
+
+                if (selectedCustomerId) {
+                    customerSelect.value = selectedCustomerId;
+                }
+            })
+            .catch(err => console.error("Error loading customers:", err));
+    }
+
     function openSaveModal(info) {
         closePopover();
         form.reset();
 
         document.getElementById('modalTitle').innerText = 'SAVE BOOKING';
+        document.getElementById("customerId").value = "";
+
+        newCustomerFields.classList.add("d-none");
+        customerButton.classList.remove("new-customer");
+        customerButton.textContent = "ADD NEW CUSTOMER";
+
         const saveButton = document.querySelector('#saveButton');
         const editButton = document.querySelector('#editButton');
         saveButton?.classList.remove('d-none');
@@ -137,12 +319,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const startDatetimeInput = document.querySelector("input[name='start_datetime']");
         if (startDatetimeInput) {
-            const localDatetime = new Date(info.start.getTime())
-                .toISOString()
-                .slice(0, 16);
+            const localDatetime = new Date(info.start.getTime()).toISOString().slice(0, 16);
             startDatetimeInput.value = localDatetime;
         }
 
+        loadCustomerOptions();
         new bootstrap.Modal(document.getElementById('bookingModal')).show();
     }
 
@@ -150,10 +331,15 @@ document.addEventListener('DOMContentLoaded', () => {
         closePopover();
 
         document.getElementById('modalTitle').innerText = 'EDIT BOOKING';
+
         const saveButton = document.querySelector('#saveButton');
         const editButton = document.querySelector('#editButton');
         editButton?.classList.remove('d-none');
-        saveButton?.classList.add('d-none')
+        saveButton?.classList.add('d-none');
+
+        newCustomerFields.classList.add("d-none");
+        customerButton.classList.remove("new-customer");
+        customerButton.textContent = "ADD NEW CUSTOMER";
 
         fetch(`/api/booking/${event.id}`)
             .then(response => response.json())
@@ -178,15 +364,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector("input[name='move_out_cleaning']").checked = booking.hasMoveOutCleaning;
                 document.querySelector("input[name='clean_fridge']").checked = booking.hasCleanFridge;
                 document.getElementById("customerId").value = booking.customer.id;
+
+                loadCustomerOptions(booking.customer.id);
+
                 editButton.setAttribute("data-booking-id", booking.id);
                 new bootstrap.Modal(document.getElementById("bookingModal")).show();
             })
             .catch(error => console.error("Error loading booking data:", error));
     }
 
-    function openDeleteModal(event) {
+    function openDeleteModal(event, type = "booking") {
         closePopover();
-        document.querySelector("#delete-button").setAttribute("data-booking-id", event.id);
+        deleteType = type;
+        const id = type === "unavailable" ? event.extendedProps.id : event.id;
+        document.querySelector("#delete-button").setAttribute("data-id", id);
         const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
         modal.show();
     }
@@ -197,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveBooking() {
         const saveButton = document.querySelector('#saveButton');
-        saveButton.disabled = true; 
+        saveButton.disabled = true;
 
         const booking = getFormData();
         const startDateTimeObj = new Date(booking.startDatetime);
@@ -245,27 +436,42 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-
     document.querySelector("#delete-button").addEventListener("click", function () {
-        const bookingId = this.getAttribute("data-booking-id");
-        deleteBooking(bookingId);
+        const id = this.getAttribute("data-id");
+        if (deleteType === "unavailable") {
+            deleteUnavailable(id);
+        } else {
+            deleteBooking(id);
+        }
     });
 
-    function deleteBooking(bookingId) {
-        fetch(`/api/booking/${bookingId}`, {
+    function deleteUnavailable(id) {
+        fetch(`/api/unavailable-dates/${id}`, {
             method: "DELETE",
         })
-            .then(async response => {
+            .then(response => {
                 if (response.ok) {
-                    window.location.reload();
-                    return response.json();
-                } else {
-                    const responseWithError = await response.text();
-                    throw new Error(responseWithError);
+                    calendar.refetchEvents();
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
                 }
             })
             .catch(error => {
-                console.error(JSON.parse(error.message));
+                console.error("Error deleting an unavailable date:", error);
+            });
+    }
+
+    function deleteBooking(id) {
+        fetch(`/api/booking/${id}`, {
+            method: "DELETE",
+        })
+            .then(response => {
+                if (response.ok) {
+                    calendar.refetchEvents();
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting a booking:", error);
             });
     }
 
@@ -307,8 +513,6 @@ document.addEventListener('DOMContentLoaded', () => {
         editButton.disabled = true;
 
         const booking = getFormData();
-        booking.customerId = document.getElementById("customerId").value;
-
         const startDateTimeObj = new Date(booking.startDatetime);
         const finishDateTimeObj = new Date(booking.finishDatetime);
 
@@ -356,6 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getFormData() {
         return {
+            customerId: document.getElementById("customerId").value,
             firstName: document.querySelector("input[name='first_name']").value,
             lastName: document.querySelector("input[name='last_name']").value,
             phoneNumber: mask.masked.unmaskedValue,
@@ -377,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hasCleanFridge: document.querySelector("input[name='clean_fridge']").checked,
         };
     }
-    
+
     function validateFinishDatetime(startDateTimeObj, finishDateTimeObj, finishDatetimeInput) {
         if (finishDateTimeObj < startDateTimeObj) {
             finishDatetimeInput.setCustomValidity("End time cannot be earlier than start time.");

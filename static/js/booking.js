@@ -5,20 +5,106 @@ const phoneInput = document.getElementById("phone_number")
 const urlBase = location.protocol + "//" + location.host;
 form.addEventListener("submit", saveBooking);
 
-document.addEventListener("DOMContentLoaded", () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = new String(now.getMonth() + 1).padStart(2, "0");
-    const day = new String(now.getDate()).padStart(2, "0");
-    const hours = new String(now.getHours()).padStart(2, "0");
-    const minutes = new String(now.getMinutes()).padStart(2, "0");
-    const currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
-    const dateTimeInput = form.querySelector('input[name="start_datetime"]');
-    dateTimeInput.min = currentDateTime;
+$(document).ready(() => {
+    const $dateInput = $('#booking_date');
+    const $timeInput = $('#booking_time');
+    const DateTime = luxon.DateTime;
+
+    // Загружаем недоступные даты
+    let blockedDatesSet = new Set();
+
+    fetch('/api/unavailable-dates')
+        .then(res => res.json())
+        .then(unavailableDates => {
+            unavailableDates.forEach(entry => {
+                const start = DateTime.fromISO(entry.startDatetime, { zone: 'America/Toronto' }).startOf('day');
+                const end = DateTime.fromISO(entry.finishDatetime, { zone: 'America/Toronto' })
+                    .minus({ milliseconds: 1 })
+                    .startOf('day');
+
+                for (let date = start; date <= end; date = date.plus({ days: 1 })) {
+                    blockedDatesSet.add(date.toISODate());
+                }
+            });
+
+            flatpickr("#booking_date", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                maxDate: new Date().fp_incr(60),
+                disable: [
+                    function (date) {
+                        const iso = DateTime.fromJSDate(date).toISODate();
+                        return (date.getDay() === 0 || date.getDay() === 6 || blockedDatesSet.has(iso));
+                    }
+                ],
+                onChange: function (selectedDates, dateStr) {
+                    $dateInput.val(dateStr).trigger('change');
+                }
+            });
+        });
+
+    $dateInput.on('change', function () {
+        const selectedDate = $(this).val();
+        $timeInput.val('').prop('disabled', true);
+        $('#start_datetime').val('');
+
+        if (!selectedDate) return;
+
+        fetch(`/api/booked-intervals?date=${selectedDate}`)
+            .then(res => res.json())
+            .then(data => {
+                const disabledRanges = [];
+
+                if (data.intervals) {
+                    data.intervals.forEach(interval => {
+                        const from = DateTime.fromISO(interval.from, { zone: 'America/Toronto' });
+                        const to = DateTime.fromISO(interval.to, { zone: 'America/Toronto' });
+
+                        if (from.toISODate() === selectedDate) {
+                            disabledRanges.push([
+                                from.toFormat('HH:mm'),
+                                to.toFormat('HH:mm')
+                            ]);
+                        }
+                    });
+                }
+
+                $timeInput.timepicker('remove');
+
+                $timeInput.timepicker({
+                    timeFormat: 'H:i',
+                    step: 30,
+                    minTime: '09:00',
+                    maxTime: '14:00',
+                    disableTimeRanges: disabledRanges
+                });
+
+                $timeInput.prop('disabled', false);
+            });
+    });
+
+    $timeInput.on('change', function () {
+        const selectedTime = $(this).val();
+        const selectedDate = $dateInput.val();
+
+        if (selectedDate && selectedTime) {
+            const [hour, minute] = selectedTime.split(':');
+            const start = DateTime.fromObject({
+                year: parseInt(selectedDate.split('-')[0]),
+                month: parseInt(selectedDate.split('-')[1]),
+                day: parseInt(selectedDate.split('-')[2]),
+                hour: parseInt(hour),
+                minute: parseInt(minute)
+            }, { zone: 'America/Toronto' });
+
+            $('#start_datetime').val(start.toISO());
+        }
+    });
+    
 });
 
-const mask = new IMask(phoneInput,{
-    mask:"+{1}(000)000-0000"
+const mask = new IMask(phoneInput, {
+    mask: "+{1}(000)000-0000"
 })
 
 addressInput.addEventListener("input", () => {
@@ -33,7 +119,7 @@ addressInput.addEventListener("input", () => {
                 addressesSuggestions.innerHTML = ``;
 
                 if (json.addresses.length > 0) {
-                    addressesSuggestions.style.display = "block"; // Показываем список
+                    addressesSuggestions.style.display = "block";
 
                     json.addresses.forEach((address) => {
                         const li = document.createElement("li");
@@ -42,7 +128,7 @@ addressInput.addEventListener("input", () => {
                         addressesSuggestions.appendChild(li);
                     });
                 } else {
-                    addressesSuggestions.style.display = "none"; // Скрываем, если пусто
+                    addressesSuggestions.style.display = "none";
                 }
             });
     } else {
@@ -50,7 +136,6 @@ addressInput.addEventListener("input", () => {
     }
 });
 
-// Закрываем список при потере фокуса
 document.addEventListener("click", (e) => {
     if (!addressInput.contains(e.target) && !addressesSuggestions.contains(e.target)) {
         addressesSuggestions.style.display = "none";
@@ -61,7 +146,7 @@ function selectAddressesSuggestion(suggestion) {
     addressInput.value = suggestion;
     addressesSuggestions.style.display = "none";
 }
-    
+
 addressInput.addEventListener("blur", () => {
     setTimeout(() => {
         addressesSuggestions.innerHTML = ``;
@@ -76,12 +161,12 @@ function saveBooking(event) {
         return;
     }
 
+    const startDatetime = document.querySelector("input[name='start_datetime']").value;
     const firstName = document.querySelector("input[name='first_name']").value;
     const lastName = document.querySelector("input[name='last_name']").value;
     const phoneNumber = mask.masked.unmaskedValue;
     const email = document.querySelector("input[name='email']").value;
     const street = document.querySelector("input[name='street']").value;
-    const startDatetime = document.querySelector("input[name='start_datetime']").value;
     const selectedService = document.querySelector("select[name='selected_service']").value;
     const building = document.querySelector("select[name='building']").value;
     const roomsNumber = document.querySelector("input[name='rooms_number']").value;
@@ -141,3 +226,4 @@ function saveBooking(event) {
             console.error(JSON.parse(error.message));
         });
 }
+

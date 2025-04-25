@@ -1,16 +1,17 @@
 from datetime import datetime, timedelta
-from typing import Union
+from typing import Optional, Union
 
 from flask import Response, json, request
 from flask_login import login_required
 from flask_restful import Resource
 from pydantic import EmailStr, ValidationError
 
-from common.utils.datetime_util import iso_string_to_datetime_utc
 from common.exceptions.entity_not_found_exception import EntityNotFoundError
+from common.utils.datetime_util import iso_string_to_datetime_utc
 from enums.building_type import BuildingType
 from enums.selected_service import SelectedService
 from models.booking import Booking
+from models.customer import Customer
 from schemes.booking_scheme import BookingScheme
 from schemes.customer_scheme import CustomerScheme
 from services.booking_service import BookingService
@@ -46,7 +47,13 @@ class BookingResource(Resource):
 
         try:
             data: dict = request.json
-            customer_id: int = int(data["customerId"])
+            customer_id: Optional[int] = (
+                int(
+                    data["customerId"],
+                )
+                if data.get("customerId")
+                else None
+            )
             first_name: str = data.get("firstName")
             last_name: str = data.get("lastName", "")
             phone_number: str = data.get("phoneNumber")
@@ -79,13 +86,16 @@ class BookingResource(Resource):
             square_feet = abs(int(data.get("squareFeet")))
             has_own_equipment = bool(data.get("hasOwnEquipment"))
 
-            customer_scheme = CustomerScheme(
-                first_name=first_name,
-                last_name=last_name,
-                phone_number=phone_number,
-                email=email,
-                street=street,
-            )
+            customer_scheme: Optional[CustomerScheme] = None
+
+            if not customer_id:
+                customer_scheme = CustomerScheme(
+                    first_name=first_name,
+                    last_name=last_name,
+                    phone_number=phone_number,
+                    email=email,
+                    street=street,
+                )
 
             booking_scheme = BookingScheme(
                 start_datetime=start_datetime,
@@ -124,14 +134,15 @@ class BookingResource(Resource):
             )
 
         try:
-            self.customer_service.update_customer(
-                customer_id=customer_id,
-                first_name=customer_scheme.first_name,
-                last_name=customer_scheme.last_name,
-                phone_number=customer_scheme.phone_number,
-                email=customer_scheme.email,
-                street=customer_scheme.street,
-            )
+            if not customer_id:
+                customer: Customer = self.customer_service.create_customer(
+                    first_name=customer_scheme.first_name,
+                    last_name=customer_scheme.last_name,
+                    phone_number=customer_scheme.phone_number,
+                    email=customer_scheme.email,
+                    street=customer_scheme.street,
+                )
+                customer_id = customer.id
 
             self.booking_service.update_booking(
                 booking_id=booking_id,
@@ -154,9 +165,7 @@ class BookingResource(Resource):
             return Response(
                 status=200,
                 content_type="application/json",
-                response=json.dumps(
-                    {"message": "Booking updated successfully!"}
-                ),
+                response=json.dumps({"message": "Booking updated successfully!"}),
             )
         except EntityNotFoundError as e:
             return Response(
@@ -169,12 +178,8 @@ class BookingResource(Resource):
     def patch(self, booking_id: int):
         data = request.json
         try:
-            start_datetime: datetime = iso_string_to_datetime_utc(
-                data.get("start")
-            )
-            finish_datetime: datetime = iso_string_to_datetime_utc(
-                data.get("end")
-            )
+            start_datetime: datetime = iso_string_to_datetime_utc(data.get("start"))
+            finish_datetime: datetime = iso_string_to_datetime_utc(data.get("end"))
         except (ValueError, TypeError) as error:
             return Response(
                 status=400,
@@ -191,9 +196,7 @@ class BookingResource(Resource):
             return Response(
                 status=200,
                 content_type="application/json",
-                response=json.dumps(
-                    {"message": "Booking updated successfully!"}
-                ),
+                response=json.dumps({"message": "Booking updated successfully!"}),
             )
         except EntityNotFoundError as e:
             return Response(
@@ -209,9 +212,7 @@ class BookingResource(Resource):
             return Response(
                 status=200,
                 content_type="application/json",
-                response=json.dumps(
-                    {"message": "Booking deleted successfully!"}
-                ),
+                response=json.dumps({"message": "Booking deleted successfully!"}),
             )
         except EntityNotFoundError as e:
             return Response(

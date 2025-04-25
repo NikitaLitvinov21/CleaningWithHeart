@@ -193,6 +193,10 @@ footer {
     padding: 5px;
 }
 
+.expand-column.notes {
+    white-space: wrap;
+}
+
 .pagination-controls {
     align-items: center;
     display: flex;
@@ -379,6 +383,15 @@ footer {
     height: 60px;
     width: 100%;
     position: relative;
+}
+
+.add-place.textarea{
+    height: 100px;
+    align-items: start;
+}
+textarea.add-place-customer-input{
+    height: 100px;
+    padding: 5px 0px 0px 0px;
 }
 
 .add-place-customer-input {
