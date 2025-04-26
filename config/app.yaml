@@ -23,4 +23,4 @@ twilio:
     sid: !ENV ${TWILIO_SID:_}
     auth_token: !ENV ${TWILIO_AUTH_TOKEN:_}
     sender_phone_number: !ENV ${TWILIO_SENDER_PHONE_NUMBER:_}
-    message: !ENV ${TWILIO_MESSAGE:Hello, we remind you that we will be cleaning your house/apartment. Best regards, Cleaning With Heart!}
+    message: !ENV ${TWILIO_MESSAGE:Hello, we remind you that in an hour we will be cleaning your house/apartment. Best regards, Cleaning With Heart!}
