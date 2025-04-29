@@ -83,7 +83,7 @@ class BookingService:
                 session.close()
 
     def calculate_notify_at(self, start_datetime: datetime) -> datetime:
-        return start_datetime - timedelta(hours=1)
+        return start_datetime - timedelta(days=1)
 
     @transaction
     def retrieve_booking_count(
@@ -172,7 +172,7 @@ class BookingService:
         booking.square_feet = square_feet
         booking.has_own_equipment = has_own_equipment
         booking.cleaning_master_name = cleaning_master_name
-        booking.has_customer_been_notified = False
+        # booking.has_customer_been_notified = False
 
     @transaction
     def update_booking_range(
@@ -188,7 +188,7 @@ class BookingService:
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
         booking.notify_at = self.calculate_notify_at(start_datetime)
-        booking.has_customer_been_notified = False
+        # booking.has_customer_been_notified = False
 
     @transaction
     def set_as_notified(
