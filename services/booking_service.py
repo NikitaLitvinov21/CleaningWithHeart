@@ -45,7 +45,7 @@ class BookingService:
         if current_time:
             query = query.filter(
                 Booking.notify_at < current_time,
-                Booking.start_datetime > current_time,
+                Booking.dont_notify_after > current_time,
             )
 
         if only_not_notified:
@@ -85,6 +85,11 @@ class BookingService:
     def calculate_notify_at(self, start_datetime: datetime) -> datetime:
         return start_datetime - timedelta(days=1)
 
+    def calculate_dont_notify_after(
+        self, start_datetime: datetime
+    ) -> datetime:
+        return start_datetime.replace(hour=0, minute=0, second=0)
+
     @transaction
     def retrieve_booking_count(
         self,
@@ -117,6 +122,7 @@ class BookingService:
             start_datetime=start_datetime,
             finish_datetime=finish_datetime,
             notify_at=self.calculate_notify_at(start_datetime),
+            dont_notify_after=self.calculate_dont_notify_after(start_datetime),
             selected_service=selected_service,
             has_clean_oven=has_clean_oven,
             has_clean_windows=has_clean_windows,
@@ -160,6 +166,9 @@ class BookingService:
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
         booking.notify_at = self.calculate_notify_at(start_datetime)
+        booking.dont_notify_after = self.calculate_dont_notify_after(
+            start_datetime
+        )
         booking.selected_service = selected_service
         booking.has_clean_oven = has_clean_oven
         booking.has_clean_windows = has_clean_windows
@@ -172,7 +181,7 @@ class BookingService:
         booking.square_feet = square_feet
         booking.has_own_equipment = has_own_equipment
         booking.cleaning_master_name = cleaning_master_name
-        # booking.has_customer_been_notified = False
+        booking.has_customer_been_notified = False
 
     @transaction
     def update_booking_range(
@@ -188,7 +197,10 @@ class BookingService:
         booking.start_datetime = start_datetime
         booking.finish_datetime = finish_datetime
         booking.notify_at = self.calculate_notify_at(start_datetime)
-        # booking.has_customer_been_notified = False
+        booking.dont_notify_after = self.calculate_dont_notify_after(
+            start_datetime
+        )
+        booking.has_customer_been_notified = False
 
     @transaction
     def set_as_notified(
@@ -222,6 +234,8 @@ class BookingService:
     ) -> List[Booking]:
         return (
             session.query(Booking)
-            .filter(Booking.start_datetime >= start, Booking.start_datetime <= end)
+            .filter(
+                Booking.start_datetime >= start, Booking.start_datetime <= end
+            )
             .all()
         )
