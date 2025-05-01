@@ -85,7 +85,7 @@ class BookingService:
     def calculate_notify_at(self, start_datetime: datetime) -> datetime:
         return start_datetime - timedelta(
             days=1,
-            hour=1,
+            hours=1,
         )
 
     def calculate_dont_notify_after(self, start_datetime: datetime) -> datetime:
